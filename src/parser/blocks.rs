@@ -3,10 +3,10 @@
 pub struct FunctionBlock {
     pub name: String,
     pub visibility: String,
-    pub params: Vec<String>,
     pub hash: String,
+    pub parent: String,
+    pub params: Vec<String>,
     pub children: Vec<String>,
-    pub parent: String
 }
 
 impl FunctionBlock {
@@ -19,10 +19,10 @@ impl FunctionBlock {
         FunctionBlock {
             name: String::from(data),
             visibility: String::from(data),
-            params: vec![],
             hash: String::from("12t809j39t1j3t12qwe12e12t23timorgkm"),
-            children: vec![],
-            parent: String::from("This/Very/Long/Path/To/A/file.php")
+            parent: String::from("This/Very/Long/Path/To/A/file.php"),
+            params: vec![],
+            children: vec![]
         }
     }
     
