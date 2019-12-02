@@ -1,0 +1,13 @@
+[package]
+name = "new-york"
+version = "0.1.0"
+authors = ["Poly <alexhexan22@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "pulse"
+path = "./src/pulse.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
