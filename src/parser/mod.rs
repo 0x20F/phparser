@@ -40,7 +40,7 @@ pub fn files(dir: &str) -> Vec<File> {
 
 
 /// Get all functions in a file
-pub fn functions(file: &str) {}
+pub fn functions(file: &File) {}
 
 
 
