@@ -1,12 +1,14 @@
-mod blocks;
+mod function;
+mod file;
 
-use blocks::FunctionBlock;
+use function::Function;
 
 
-pub fn run(dirs: Vec<&str>) -> FunctionBlock {
+
+pub fn run(dirs: Vec<&str>) -> Function {
     println!("Indexing the following paths ({:?})", dirs);
 
-    FunctionBlock::new(dirs[0])
+    Function::new(dirs[0])
 }
 
 

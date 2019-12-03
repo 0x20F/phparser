@@ -1,6 +1,6 @@
 /// A parsed function blocks data
 /// TODO: Some of these can be private so you can use setters with custom functionality
-pub struct FunctionBlock {
+pub struct Function {
     pub name: String,
     pub visibility: String,
     pub hash: String,
@@ -10,15 +10,15 @@ pub struct FunctionBlock {
 }
 
 
-impl FunctionBlock {
+impl Function {
     
     /// Parse the given function data to compile a list of important
     /// info about a function
     /// 
     /// TODO: Make it happen
-    pub fn new(data: &str) -> FunctionBlock {
+    pub fn new(data: &str) -> Function {
 
-        FunctionBlock {
+        Function {
             name: String::from(data),
             visibility: String::from(data),
             hash: String::from("12t809j39t1j3t12qwe12e12t23timorgkm"),
