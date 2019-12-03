@@ -9,6 +9,7 @@ use walkdir::{WalkDir, DirEntry};
 pub fn run(dirs: Vec<&str>) {
     println!("Indexing the following paths ({:?})", dirs);
 
+    // TODO: For each FileModel in the vector, find functions for it and all that
     files("/Users/alex.hexan/repo/journal_sys/tests/unit");
 }
 
@@ -33,6 +34,7 @@ pub fn files(dir: &str) {
         let entry = entry.unwrap();
 
         if is_php_file(&entry) {
+            // TODO: Return FileModels and return a vector of them
             println!("{}", entry.path().display());
         }
     }
