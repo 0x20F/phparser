@@ -10,6 +10,9 @@ pub fn run(dirs: Vec<&str>) -> FunctionBlock {
 }
 
 
-pub fn files() {
+/// Get all the files in a given directory, recursively
+pub fn files(dir: &str) {}
 
-}
+
+/// Get all functions in a file
+pub fn functions(file: &str) {}
