@@ -1,5 +1,6 @@
 /// A parsed function blocks data
 /// TODO: Some of these can be private so you can use setters with custom functionality
+/// TODO: These shouldn't all be strings
 pub struct FunctionModel {
     pub name: String,
     pub visibility: String,
