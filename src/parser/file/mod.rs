@@ -12,11 +12,13 @@ pub struct FileModel {
 impl FileModel {
 
     pub fn new(path: &str) -> FileModel {
-        let mut vec: Vec<&str> = path.split(&['/', '.'][..]).collect();
+        let mut vec: Vec<&str> = path.split(&['/', '.', '\\'][..]).collect();
 
         let ext = String::from(vec.pop().unwrap());
         let name = String::from(vec.pop().unwrap());
         let path = String::from(path);
+
+        println!("ext   : {}\nname  : {}\npath  : {}\n\n", ext, name, path);
 
         FileModel {
             name,
