@@ -3,10 +3,10 @@ mod blocks;
 use blocks::FunctionBlock;
 
 
-pub fn run(dir: &str) -> FunctionBlock {
-    println!("Indexing the following paths ({})", dir);
+pub fn run(dirs: Vec<&str>) -> FunctionBlock {
+    println!("Indexing the following paths ({:?})", dirs);
 
-    FunctionBlock::new(dir)
+    FunctionBlock::new(dirs[0])
 }
 
 

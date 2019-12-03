@@ -1,7 +1,9 @@
 mod parser;
 
 fn main() {
-    let block = parser::run("This should be an array of directories");
+    let directories = vec!["a", "b", "c"];
+
+    let block = parser::run(directories);
 
     println!("Parser finished file is: {}", block.filename_parent())
 }
