@@ -11,25 +11,17 @@ pub fn run(dirs: Vec<&str>) {
     println!("Indexing the following paths ({:?})", dirs);
 
     // TODO: For each FileModel in the vector, find functions for it and all that
-    files("/Users/alex.hexan/repo/journal_sys/tests/unit");
-}
-
-
-
-fn is_php_file(entry: &DirEntry) -> bool {
-    entry
-        .file_name()
-        .to_str()
-        .map(|s| s.ends_with(".php"))
-        .unwrap_or(true)
+    //files("/Users/alex.hexan/repo/journal_sys/tests/unit");
+    let files: Vec<File> = files("C:\\Users\\alexh\\Desktop\\boilerplate");
+    println!("Found {} files", files.len());
 }
 
 
 
 /// Get all the files in a given directory, recursively
-pub fn files(dir: &str) -> Vec<FileModel> {
+pub fn files(dir: &str) -> Vec<File> {
 
-    let mut files: Vec<FileModel> = vec![];
+    let mut files: Vec<File> = vec![];
     let walker = WalkDir::new(dir);
 
     for entry in walker {
@@ -49,3 +41,15 @@ pub fn files(dir: &str) -> Vec<FileModel> {
 
 /// Get all functions in a file
 pub fn functions(file: &str) {}
+
+
+
+
+
+fn is_php_file(entry: &DirEntry) -> bool {
+    entry
+        .file_name()
+        .to_str()
+        .map(|s| s.ends_with(".php"))
+        .unwrap_or(true)
+}
