@@ -9,6 +9,7 @@ pub struct FunctionBlock {
     pub children: Vec<String>,
 }
 
+
 impl FunctionBlock {
     
     /// Parse the given function data to compile a list of important
@@ -16,6 +17,7 @@ impl FunctionBlock {
     /// 
     /// TODO: Make it happen
     pub fn new(data: &str) -> FunctionBlock {
+
         FunctionBlock {
             name: String::from(data),
             visibility: String::from(data),
@@ -37,7 +39,7 @@ impl FunctionBlock {
     ///     parent: "Path/To/File/Containing/This/file.php"
     /// };
     /// 
-    /// block::filename_parent() // returns "file.php"
+    /// block.filename_parent() // returns "file.php"
     /// ```
     pub fn filename_parent(&self) -> String {
         let vec: Vec<&str> = self.parent.split("/").collect();
