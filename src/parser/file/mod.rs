@@ -2,10 +2,10 @@ use super::function::FunctionModel;
 
 // TODO: These shouldn't all be strings
 pub struct FileModel {
-    pub name: String,
-    pub ext: String,
-    pub path: String,
-    pub functions: Vec<FunctionModel>
+    name: String,
+    ext: String,
+    path: String,
+    functions: Vec<FunctionModel>
 }
 
 
@@ -18,8 +18,6 @@ impl FileModel {
         let name = String::from(vec.pop().unwrap());
         let path = String::from(path);
 
-        println!("ext   : {}\nname  : {}\npath  : {}\n\n", ext, name, path);
-
         FileModel {
             name,
             ext,
@@ -28,7 +26,36 @@ impl FileModel {
         }
     }
 
+
+
     pub fn add_function(&mut self, function: FunctionModel) {
         self.functions.push(function);
+    }
+
+    pub fn update_function(&mut self, function: FunctionModel) {
+        // TODO
+    }
+
+    pub fn set_functions(&mut self, functions: Vec<FunctionModel>) {
+        self.functions = functions;
+    }
+
+
+
+
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
+    pub fn ext(&self) -> &String {
+        &self.ext
+    }
+
+    pub fn path(&self) -> &String {
+        &self.path
+    }
+
+    pub fn functions(&self) -> &Vec<FunctionModel> {
+        &self.functions
     }
 }
