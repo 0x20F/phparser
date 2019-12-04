@@ -1,12 +1,20 @@
+extern crate md5;
+
+
+use md5::Digest;
+use std::hash::Hash;
+
+use super::file::FileModel;
+
+
 /// A parsed function blocks data
 /// TODO: Some of these can be private so you can use setters with custom functionality
 /// TODO: These shouldn't all be strings
 pub struct FunctionModel {
     pub name: String,
     pub visibility: String,
-    pub hash: String,
+    pub hash: Digest,
     pub parent: String,
-    pub params: Vec<String>,
     pub children: Vec<String>,
 }
 
@@ -17,33 +25,29 @@ impl FunctionModel {
     /// info about a function
     /// 
     /// TODO: Make it happen
-    pub fn new(data: &str) -> FunctionModel {
+    pub fn new(data: Vec<String>, parent: &FileModel) -> FunctionModel {
+
+        // Declaration is always first line
+        let mut declaration = data.first().unwrap().to_owned();
+        let full_data = data.join("\n");
+
+        // public function fancyName(parameters)
+        let mut keywords: Vec<&str> = declaration
+            .split(&[' ', '('][..])
+            .collect();
+        keywords.retain(|&word| word.len() > 0);
+
+        let visibility = String::from(keywords.first().unwrap().to_owned());
+        let name = String::from(keywords.get(2).unwrap().to_owned());
+        let hash = md5::compute(full_data);
+
 
         FunctionModel {
-            name: String::from(data),
-            visibility: String::from(data),
-            hash: String::from("12t809j39t1j3t12qwe12e12t23timorgkm"),
-            parent: String::from("This/Very/Long/Path/To/A/file.php"),
-            params: vec![],
+            name,
+            visibility,
+            hash,
+            parent: parent.name().to_string(),
             children: vec![]
         }
-    }
-    
-    
-    
-    /// Gets the name of the file this function is in
-    /// 
-    /// # Example
-    /// ```
-    /// let block = FunctionBlock {
-    ///     // Other params...
-    ///     parent: "Path/To/File/Containing/This/file.php"
-    /// };
-    /// 
-    /// block.filename_parent() // returns "file.php"
-    /// ```
-    pub fn filename_parent(&self) -> String {
-        let vec: Vec<&str> = self.parent.split("/").collect();
-        vec.last().unwrap().to_string()
     }
 }
