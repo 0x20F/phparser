@@ -2,35 +2,50 @@ mod function;
 mod file;
 
 use function::FunctionModel as Function;
-use file::FileModel as File;
+use file::FileModel;
+
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::{BufReader, BufRead};
+use std::error::Error;
+use std::{thread, time};
+
 use walkdir::{WalkDir, DirEntry};
 
 
 
-pub fn run(dirs: Vec<&str>) {
+pub async fn run(dirs: Vec<&str>) {
     println!("Indexing the following paths ({:?})", dirs);
 
-    // TODO: For each FileModel in the vector, find functions for it and all that
-    //files("/Users/alex.hexan/repo/journal_sys/tests/unit");
-    let files: Vec<File> = files("C:\\Users\\alexh\\Desktop\\boilerplate");
-    println!("Found {} files", files.len());
+    let mut files: HashMap<String, FileModel> = files("/Users/alex.hexan/repo/journal_sys/sys");
+
+    for (_, file) in files.iter_mut() {
+        //println!("Found {}", file.filename());
+        let functions: Vec<Function> = functions(file).await;
+        file.set_functions(functions);
+
+        println!("{}:\nFunctions: {}\n", file.name(), file.functions().len());
+    }
+
+    println!("Total files: {}", files.len());
 }
 
 
 
 /// Get all the files in a given directory, recursively
-pub fn files(dir: &str) -> Vec<File> {
+fn files(dir: &str) -> HashMap<String, FileModel> {
 
-    let mut files: Vec<File> = vec![];
+    let mut files: HashMap<String, FileModel> = HashMap::new();
     let walker = WalkDir::new(dir);
 
     for entry in walker {
         let entry = entry.unwrap();
 
         if is_php_file(&entry) {
-            // TODO: Return FileModels and return a vector of them
-            println!("{}", entry.path().display());
-            files.push(File::new(entry.path().to_str().unwrap()));
+            files.insert(
+                entry.path().display().to_string(),
+                FileModel::new(entry.path().to_str().unwrap())
+            );
         }
     }
 
@@ -40,8 +55,75 @@ pub fn files(dir: &str) -> Vec<File> {
 
 
 /// Get all functions in a file
-pub fn functions(file: &File) {}
+async fn functions(file: &mut FileModel) -> Vec<Function> {
 
+    let mut functions: Vec<Function> = vec![];
+
+    let file_contents = File::open(file.path()).unwrap();
+    let reader = BufReader::new(file_contents);
+
+    let mut stack: Vec<i8> = vec![];
+    let mut function_data: Vec<String> = vec![];
+    let mut is_class = false;
+    let mut is_function = false;
+
+
+
+
+    for line in reader.lines() {
+        let line = match line {
+            Ok(line) => line,
+            Err(why) => {
+                eprintln!("Error: {}; skipped {}", why, file.name());
+                break;
+            }
+        };
+
+        // Simple checks to not waste time
+        if line.contains("class") { is_class = true; }
+        if !is_class { continue; }
+
+
+        // Keeping track of code blocks
+        if line.contains('{') { stack.push(1); }
+        if line.contains('}') {
+            stack.pop();
+
+            if stack.len() == 1 && is_function {
+                let function = Function::new(function_data, &file);
+
+                functions.push(function);
+
+                function_data = vec![];
+                is_function = false;
+
+                continue;
+            }
+        }
+
+        // If already in a function, don't try and match aswell
+        if stack.len() >= 2 && is_function {
+            function_data.push(line);
+            continue;
+        }
+
+        // Check if it's a function
+        if
+            line.contains("private function") ||
+            line.contains("public function") ||
+            line.contains("protected function")
+        {
+            is_function = true;
+            function_data.push(line);
+        }
+    }
+
+    functions
+}
+
+
+
+//async fn changed(file: &FileModel) -> Vec<&Function> {}
 
 
 
