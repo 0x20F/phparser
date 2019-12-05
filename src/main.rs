@@ -26,7 +26,7 @@ fn main() -> Result<()> {
     // Add path to be watched, recursively so everything inside it's children
     // and their children gets watched.
     watcher.watch("/Users/alex.hexan/repo/journal_sys/sys", RecursiveMode::Recursive);
-    
+
     loop {
         // Find out if the incoming event went ok
         let event = match rx.recv() {
