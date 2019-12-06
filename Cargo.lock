@@ -365,7 +365,7 @@ dependencies = [
 [[package]]
 name = "paris"
 version = "0.1.0"
-source = "git+https://github.com/SirTheViking/paris#a1e42f8d3f70bdab7987033837948c2679582171"
+source = "git+https://github.com/SirTheViking/paris#9fd5b1ae3a09789accff2fbcdd02f43597fb4193"
 dependencies = [
  "colored 1.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
