@@ -2,7 +2,6 @@ extern crate md5;
 
 
 use md5::Digest;
-use std::hash::Hash;
 
 use super::file::FileModel;
 
@@ -23,12 +22,10 @@ impl FunctionModel {
     
     /// Parse the given function data to compile a list of important
     /// info about a function
-    /// 
-    /// TODO: Make it happen
     pub fn new(data: Vec<String>, parent: &FileModel) -> FunctionModel {
 
         // Declaration is always first line
-        let mut declaration = data.first().unwrap().to_owned();
+        let declaration = data.first().unwrap().to_owned();
         let full_data = data.join("\n");
 
         // public function fancyName(parameters)

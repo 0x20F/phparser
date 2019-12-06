@@ -7,8 +7,6 @@ use file::FileModel;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufReader, BufRead};
-use std::error::Error;
-use std::{thread, time};
 
 use walkdir::{WalkDir, DirEntry};
 
