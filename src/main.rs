@@ -10,9 +10,11 @@ use std::time::Duration;
 
 fn main() -> Result<()> {
 
-    let directories = vec!["a", "b", "c"];
+    let directories = vec![
+        "/Users/alex.hexan/repo/journal_sys/sys",
+        "/Users/alex.hexan/repo/journal_sys/tests/unit"
+    ];
     let files = block_on(parser::run(directories));
-
 
 
 

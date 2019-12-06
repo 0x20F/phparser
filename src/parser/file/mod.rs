@@ -4,6 +4,7 @@ use super::function::FunctionModel;
 pub struct FileModel {
     name: String,
     path: String,
+    ext: String,
     functions: Vec<FunctionModel>
 }
 
@@ -13,11 +14,13 @@ impl FileModel {
     pub fn new(path: &str) -> FileModel {
         let mut vec: Vec<&str> = path.split(&['/', '.', '\\'][..]).collect();
 
+        let ext = String::from(vec.pop().unwrap());
         let name = String::from(vec.pop().unwrap());
         let path = String::from(path);
 
         FileModel {
             name,
+            ext,
             path,
             functions: vec![]
         }

@@ -15,9 +15,13 @@ use walkdir::{WalkDir, DirEntry};
 pub async fn run(dirs: Vec<&str>) {
     println!("Indexing the following paths ({:?})", dirs);
 
-    let mut files: HashMap<String, FileModel> = files("/Users/alex.hexan/repo/journal_sys/sys");
+    let mut total_files: HashMap<String, FileModel> = HashMap::new();
+    
+    for dir in &dirs {
+        total_files.extend(files(dir));
+    }
 
-    for (_, file) in files.iter_mut() {
+    for (_, file) in total_files.iter_mut() {
         //println!("Found {}", file.filename());
         let functions: Vec<Function> = functions(file).await;
         file.set_functions(functions);
@@ -25,7 +29,7 @@ pub async fn run(dirs: Vec<&str>) {
         println!("{}:\nFunctions: {}\n", file.name(), file.functions().len());
     }
 
-    println!("Total files: {}", files.len());
+    println!("Total files: {}", total_files.len());
 }
 
 
