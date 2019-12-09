@@ -6,36 +6,45 @@ use file::FileModel;
 
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{BufReader, BufRead};
+use std::io::{ BufReader, BufRead };
+use threadpool::ThreadPool;
 
-use walkdir::{WalkDir, DirEntry};
+use walkdir::{ WalkDir, DirEntry };
+use std::sync::{Arc, Mutex, RwLock};
+
+use paris::Logger;
 
 
-
-pub async fn run(dirs: Vec<&str>) {
+pub fn run(dirs: Vec<&str>) -> HashMap<String, FileModel> {
     println!("Indexing the following paths ({:?})", dirs);
 
-    let mut total_files: HashMap<String, FileModel> = HashMap::new();
-    
+    let logger = Logger::new(false);
+    let pool = ThreadPool::new(10);
+    let mut total_files: Arc<RwLock<HashMap<String, FileModel>>> = Arc::new(RwLock::new(HashMap::new()));
+
     for dir in &dirs {
-        total_files.extend(files(dir));
+        let mut fs = total_files.write().unwrap();
+        fs.extend(files(dir));
     }
 
-    for (_, file) in total_files.iter_mut() {
+    logger.success(format!("Found: {} files", total_files.read().unwrap().len()));
+
+    for (_, file) in total_files.read().unwrap().iter_mut() {
         //println!("Found {}", file.filename());
-        let functions: Vec<Function> = functions(file).await;
+        let functions: Vec<Function> = functions(file);
         file.set_functions(functions);
 
         println!("{}:\nFunctions: {}\n", file.name(), file.functions().len());
     }
 
-    println!("Total files: {}", total_files.len());
+
+    *total_files.read().unwrap()
 }
 
 
 
 /// Get all the files in a given directory, recursively
-fn files(dir: &str) -> HashMap<String, FileModel> {
+pub fn files(dir: &str) -> HashMap<String, FileModel> {
 
     let mut files: HashMap<String, FileModel> = HashMap::new();
     let walker = WalkDir::new(dir);
@@ -57,7 +66,7 @@ fn files(dir: &str) -> HashMap<String, FileModel> {
 
 
 /// Get all functions in a file
-async fn functions(file: &mut FileModel) -> Vec<Function> {
+pub fn functions(file: &mut FileModel) -> Vec<Function> {
 
     let mut functions: Vec<Function> = vec![];
 
@@ -103,7 +112,7 @@ async fn functions(file: &mut FileModel) -> Vec<Function> {
             }
         }
 
-        // If already in a function, don't try and match aswell
+        // If already in a function, don't try and match as well
         if stack.len() >= 2 && is_function {
             function_data.push(line);
             continue;
