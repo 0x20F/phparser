@@ -349,6 +349,7 @@ version = "0.1.0"
 dependencies = [
  "crossbeam-channel 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "md5 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "notify 5.0.0-pre.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "paris 1.0.0 (git+https://github.com/SirTheViking/paris)",
@@ -415,7 +416,7 @@ dependencies = [
 [[package]]
 name = "paris"
 version = "1.0.0"
-source = "git+https://github.com/SirTheViking/paris#50ebc059845746a639fcedfed4e37d5dc3464b41"
+source = "git+https://github.com/SirTheViking/paris#181388929b57bacb97776af14b2da96adf8a244b"
 dependencies = [
  "chrono 0.4.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "colored 1.9.0 (registry+https://github.com/rust-lang/crates.io-index)",

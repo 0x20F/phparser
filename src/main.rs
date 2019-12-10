@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate lazy_static;
+
 mod parser;
 
 use futures::executor::block_on;
@@ -17,7 +20,7 @@ fn main() -> Result<()> {
     let files = block_on(parser::run(directories));
 
 
-
+/*
 
     // Create a channel to receive the events
     let (tx, rx) = unbounded();
@@ -51,5 +54,6 @@ fn main() -> Result<()> {
             EventKind::Remove(_) => println!("File removed\n\n"),
             _ => println!("Something else happened, probably an error")
         }
-    }
+    }*/
+    Ok(())
 }

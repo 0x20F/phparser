@@ -14,4 +14,5 @@ md5 = "0.7.0"
 crossbeam-channel = "0.3.8"
 notify = "=5.0.0-pre.1"
 threadpool = "1.7.1"
+lazy_static = "1.4.0"
 paris = { git = "https://github.com/SirTheViking/paris" }

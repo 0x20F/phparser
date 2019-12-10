@@ -10,35 +10,34 @@ use std::io::{ BufReader, BufRead };
 use threadpool::ThreadPool;
 
 use walkdir::{ WalkDir, DirEntry };
-use std::sync::{Arc, Mutex, RwLock};
 
 use paris::Logger;
 
 
-pub fn run(dirs: Vec<&str>) -> HashMap<String, FileModel> {
+pub async fn run(dirs: Vec<&str>) -> HashMap<String, FileModel> {
     println!("Indexing the following paths ({:?})", dirs);
 
-    let logger = Logger::new(false);
+    let mut logger = Logger::new(true);
     let pool = ThreadPool::new(10);
-    let mut total_files: Arc<RwLock<HashMap<String, FileModel>>> = Arc::new(RwLock::new(HashMap::new()));
+    let mut total_files: HashMap<String, FileModel> = HashMap::new();
+
+    logger.info("Starting parser").loading("Parsing files");
 
     for dir in &dirs {
-        let mut fs = total_files.write().unwrap();
-        fs.extend(files(dir));
+        total_files.extend(files(dir));
     }
 
-    logger.success(format!("Found: {} files", total_files.read().unwrap().len()));
-
-    for (_, file) in total_files.read().unwrap().iter_mut() {
+    for (_, file) in total_files.iter_mut() {
         //println!("Found {}", file.filename());
         let functions: Vec<Function> = functions(file);
         file.set_functions(functions);
 
-        println!("{}:\nFunctions: {}\n", file.name(), file.functions().len());
+        //println!("{}:\nFunctions: {}\n", file.name(), file.functions().len());
     }
 
+    logger.success(format!("Found: {} files", total_files.len()));
 
-    *total_files.read().unwrap()
+    total_files
 }
 
 
@@ -85,7 +84,7 @@ pub fn functions(file: &mut FileModel) -> Vec<Function> {
         let line = match line {
             Ok(line) => line,
             Err(why) => {
-                eprintln!("Error: {}; skipped {}", why, file.name());
+                //eprintln!("Error: {}; skipped {}", why, file.name());
                 break;
             }
         };
