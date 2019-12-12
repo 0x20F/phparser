@@ -3,7 +3,6 @@ extern crate lazy_static;
 
 mod parser;
 
-use futures::executor::block_on;
 use crossbeam_channel::unbounded;
 use notify::{ RecursiveMode, Result, watcher, Watcher, EventKind };
 use notify::{ Error };
@@ -14,10 +13,9 @@ use std::time::Duration;
 fn main() -> Result<()> {
 
     let directories = vec![
-        "/Users/alex.hexan/repo/journal_sys/sys",
-        "/Users/alex.hexan/repo/journal_sys/tests/unit"
+        "/Users/alex.hexan/repo/journal_sys/sys"
     ];
-    let files = block_on(parser::run(directories));
+    let files = parser::run(directories);
 
 
 /*

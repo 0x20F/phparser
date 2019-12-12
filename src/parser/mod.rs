@@ -6,36 +6,56 @@ use file::FileModel;
 
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{ BufReader, BufRead };
+use std::io::{BufReader, BufRead, Seek};
 use threadpool::ThreadPool;
+use std::sync::{ Arc, RwLock };
 
 use walkdir::{ WalkDir, DirEntry };
 
 use paris::Logger;
 
 
-pub async fn run(dirs: Vec<&str>) -> HashMap<String, FileModel> {
+pub fn run(dirs: Vec<&str>) -> HashMap<String, Arc<RwLock<FileModel>>> {
     println!("Indexing the following paths ({:?})", dirs);
 
     let mut logger = Logger::new(true);
     let pool = ThreadPool::new(10);
-    let mut total_files: HashMap<String, FileModel> = HashMap::new();
+    let mut total_files: HashMap<String, Arc<RwLock<FileModel>>> = HashMap::new();
 
     logger.info("Starting parser").loading("Parsing files");
 
+    // Find all files in directories
     for dir in &dirs {
-        total_files.extend(files(dir));
+        files(dir, &mut total_files);
     }
 
-    for (_, file) in total_files.iter_mut() {
-        //println!("Found {}", file.filename());
-        let functions: Vec<Function> = functions(file);
-        file.set_functions(functions);
+    // Parse all files in directories
+    for (_, file) in total_files.iter() {
+        let file = file.clone();
 
-        //println!("{}:\nFunctions: {}\n", file.name(), file.functions().len());
+        pool.execute(move || {
+            let f = file.read().unwrap();
+            let functions: Vec<Function> = functions(&f);
+            drop(f);
+
+            let mut f = file.write().unwrap();
+
+            f.set_functions(functions);
+        });
     }
 
-    logger.success(format!("Found: {} files", total_files.len()));
+    pool.join();
+
+
+    for (namespace, file) in &total_files {
+        let mut f = file.write().unwrap();
+        f.find_dependencies(&total_files);
+        println!("{} has {} dependencies and {} that depend on it", f.namespace(), f.depends_on.len(), f.depended_by.len());
+
+    }
+
+    logger.success(format!("Parsed: {} files", total_files.len()));
+
 
     total_files
 }
@@ -43,41 +63,44 @@ pub async fn run(dirs: Vec<&str>) -> HashMap<String, FileModel> {
 
 
 /// Get all the files in a given directory, recursively
-pub fn files(dir: &str) -> HashMap<String, FileModel> {
+pub fn files(dir: &str, files: &mut HashMap<String, Arc<RwLock<FileModel>>>) {
 
-    let mut files: HashMap<String, FileModel> = HashMap::new();
     let walker = WalkDir::new(dir);
+    let mut counter = 0;
 
     for entry in walker {
         let entry = entry.unwrap();
+        counter = counter + 1;
 
         if is_php_file(&entry) {
+            let file = FileModel::new(entry.path().to_str().unwrap());
+
+            let f = file.read().unwrap();
+            let name = f.namespace();
+            drop(f);
+
             files.insert(
-                entry.path().display().to_string(),
-                FileModel::new(entry.path().to_str().unwrap())
+                name,
+                file
             );
         }
     }
-
-    files
 }
 
 
 
 /// Get all functions in a file
-pub fn functions(file: &mut FileModel) -> Vec<Function> {
+pub fn functions(file: &FileModel) -> Vec<Function> {
 
     let mut functions: Vec<Function> = vec![];
 
     let file_contents = File::open(file.path()).unwrap();
     let reader = BufReader::new(file_contents);
-
+    reader.lines();
     let mut stack: Vec<i8> = vec![];
     let mut function_data: Vec<String> = vec![];
     let mut is_class = false;
     let mut is_function = false;
-
-
 
 
     for line in reader.lines() {
@@ -100,7 +123,7 @@ pub fn functions(file: &mut FileModel) -> Vec<Function> {
             stack.pop();
 
             if stack.len() == 1 && is_function {
-                let function = Function::new(function_data, &file);
+                let function = Function::new(function_data, file);
 
                 functions.push(function);
 
