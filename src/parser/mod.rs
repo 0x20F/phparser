@@ -1,8 +1,10 @@
 mod function;
 mod file;
+mod class;
 
 use function::FunctionModel as Function;
 use file::FileModel;
+use class::ClassModel;
 
 use std::collections::HashMap;
 use std::fs::File;
@@ -53,8 +55,7 @@ pub fn run(dirs: Vec<&str>) -> HashMap<String, Arc<RwLock<FileModel>>> {
     for (namespace, file) in &total_files {
         let mut f = file.write().unwrap();
         f.find_dependencies(&total_files);
-        println!("{} has {} dependencies and {} that depend on it", f.namespace(), f.depends_on.len(), f.depended_by.len());
-
+        //println!("{} has {} dependencies and {} that depend on it", f.namespace(), f.depends_on.len(), f.depended_by.len());
     }
 
     logger.success(format!("Parsed: {} files", total_files.len()));
@@ -92,9 +93,9 @@ pub fn files(dir: &str, files: &mut HashMap<String, Arc<RwLock<FileModel>>>) {
 
 
 
-pub fn classes(file: &FileModel) -> Vec<ClassModel> {
+/*pub fn classes(file: &FileModel) -> Vec<ClassModel> {
 
-}
+}*/
 
 
 
@@ -105,7 +106,7 @@ pub fn functions(file: &FileModel) -> Vec<Function> {
 
     let file_contents = File::open(file.path()).unwrap();
     let reader = BufReader::new(file_contents);
-    reader.lines();
+    
     let mut stack: Vec<i8> = vec![];
     let mut function_data: Vec<String> = vec![];
     let mut is_class = false;

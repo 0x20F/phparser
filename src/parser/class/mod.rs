@@ -2,7 +2,7 @@ use std::sync::{ Arc, RwLock };
 
 
 
-struct ClassModel {
+pub struct ClassModel {
     name: String,
     namespace: String, // Whatever\Whatever\ClassName
 }
