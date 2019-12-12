@@ -34,6 +34,9 @@ pub fn run(dirs: Vec<&str>) -> HashMap<String, Arc<RwLock<FileModel>>> {
         let file = file.clone();
 
         pool.execute(move || {
+            // TODO: Find all classes
+            // TODO: Find all functions for that specific class and file (because some files may not have classes)
+
             let f = file.read().unwrap();
             let functions: Vec<Function> = functions(&f);
             drop(f);
@@ -85,6 +88,12 @@ pub fn files(dir: &str, files: &mut HashMap<String, Arc<RwLock<FileModel>>>) {
             );
         }
     }
+}
+
+
+
+pub fn classes(file: &FileModel) -> Vec<ClassModel> {
+
 }
 
 

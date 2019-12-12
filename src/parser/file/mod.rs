@@ -1,4 +1,5 @@
 use super::function::FunctionModel;
+use super::class::ClassModel;
 
 use std::fs::File;
 use std::io::{ BufReader, BufRead };
@@ -13,7 +14,9 @@ pub struct FileModel {
     path    : String,
     ext     : String,
 
-    functions           : Option<Vec<FunctionModel>>,
+    functions           : Option<Vec<FunctionModel>>, // Functions that don't belong to a class
+    // All methods belonging to classes will be in their respective objects
+    classes             : Option<Vec<ClassModel>>,
     namespace           : String,
     dependencies        : Option<Vec<String>>,
 
@@ -98,6 +101,7 @@ impl FileModel {
             ext,
             path,
             functions: None,
+            classes: None,
             namespace,
             dependencies: Some(dependencies),
             depends_on: vec![],
