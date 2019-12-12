@@ -70,11 +70,9 @@ pub fn run(dirs: Vec<&str>) -> HashMap<String, Arc<RwLock<FileModel>>> {
 pub fn files(dir: &str, files: &mut HashMap<String, Arc<RwLock<FileModel>>>) {
 
     let walker = WalkDir::new(dir);
-    let mut counter = 0;
 
     for entry in walker {
         let entry = entry.unwrap();
-        counter = counter + 1;
 
         if is_php_file(&entry) {
             let file = FileModel::new(entry.path().to_str().unwrap());
@@ -106,7 +104,7 @@ pub fn functions(file: &FileModel) -> Vec<Function> {
 
     let file_contents = File::open(file.path()).unwrap();
     let reader = BufReader::new(file_contents);
-    
+
     let mut stack: Vec<i8> = vec![];
     let mut function_data: Vec<String> = vec![];
     let mut is_class = false;
