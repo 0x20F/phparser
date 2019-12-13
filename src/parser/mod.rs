@@ -8,7 +8,7 @@ use class::ClassModel;
 
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{BufReader, BufRead, Seek};
+use std::io::{Cursor, Seek, SeekFrom, BufRead};
 use threadpool::ThreadPool;
 use std::sync::{ Arc, RwLock };
 
@@ -67,6 +67,7 @@ pub fn run(dirs: Vec<&str>) -> HashMap<String, Arc<RwLock<FileModel>>> {
 
 
 /// Get all the files in a given directory, recursively
+/// // TODO: Multi thread this somehow!
 pub fn files(dir: &str, files: &mut HashMap<String, Arc<RwLock<FileModel>>>) {
 
     let walker = WalkDir::new(dir);
@@ -102,8 +103,7 @@ pub fn functions(file: &FileModel) -> Vec<Function> {
 
     let mut functions: Vec<Function> = vec![];
 
-    let file_contents = File::open(file.path()).unwrap();
-    let reader = BufReader::new(file_contents);
+    let cursor = Cursor::new(&file.contents);
 
     let mut stack: Vec<i8> = vec![];
     let mut function_data: Vec<String> = vec![];
@@ -111,7 +111,7 @@ pub fn functions(file: &FileModel) -> Vec<Function> {
     let mut is_function = false;
 
 
-    for line in reader.lines() {
+    for line in cursor.lines() {
         let line = match line {
             Ok(line) => line,
             Err(why) => {

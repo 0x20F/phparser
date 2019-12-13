@@ -1,8 +1,8 @@
 use super::function::FunctionModel;
 use super::class::ClassModel;
 
-use std::fs::File;
-use std::io::{ BufReader, BufRead };
+use std::fs::{ File, read_to_string };
+use std::io::{ Cursor, BufReader, BufRead };
 use std::collections::HashMap;
 use std::sync::{ Arc, RwLock };
 use std::rc::Rc;
@@ -13,6 +13,7 @@ pub struct FileModel {
     name    : String,
     path    : String,
     ext     : String,
+    pub contents: String,
 
     functions           : Option<Vec<FunctionModel>>, // Functions that don't belong to a class
     // All methods belonging to classes will be in their respective objects
@@ -33,13 +34,15 @@ impl FileModel {
         // TODO: Change name
         let mut vec: Vec<&str> = path.split(&['/', '\\'][..]).collect();
 
-        let file_contents = File::open(path).unwrap();
-        let reader = BufReader::new(file_contents);
+        let content = read_to_string(path).unwrap();
+
+        // TODO: Use the cursor to keep track of line positions
+        let reader = Cursor::new(&content);
 
         let mut dependencies: Vec<String> = vec![];
         let mut namespace: Option<String> = None;
 
-        for line in reader.lines() {
+        for line in reader.clone().lines() {
             let line = match line {
                 Ok(line) => line,
                 Err(why) => {
@@ -100,6 +103,7 @@ impl FileModel {
             name,
             ext,
             path,
+            contents: content,
             functions: None,
             classes: None,
             namespace,
