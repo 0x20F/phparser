@@ -28,6 +28,8 @@ pub fn run(dirs: Vec<&str>) -> HashMap<String, Arc<RwLock<FileModel>>> {
 
     // Find all files in directories
     for dir in &dirs {
+        // TODO: Preliminary scan of each file to map out lines for every important part
+        // TODO: Then scan again and jump between those lines to get the needed data
         files(dir, &mut total_files);
     }
 
