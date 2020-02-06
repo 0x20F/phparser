@@ -4,6 +4,12 @@ impl Parser {
     pub fn new() -> Parser {
         Parser {}
     }
+
+
+    pub fn parse_dir(&self) {}
+
+
+    pub fn parse_file(&self) {}
 }
 
 
