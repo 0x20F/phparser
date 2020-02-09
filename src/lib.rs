@@ -6,10 +6,24 @@ impl Parser {
     }
 
 
-    pub fn parse_dir(&self) {}
+    pub fn parse(&self, dirs: &[&str]) {
+        // Start parsing after creating the parser
+
+        // Walk through all items in each directory
+        for dir in dirs {
+            self.parse_dir(dir);
+        }
+    }
 
 
-    pub fn parse_file(&self) {}
+    pub fn parse_dir(&self, dir: &str) {
+        // Find all files and go down the parse chain
+    }
+
+
+    pub fn parse_file(&self, file_path: String) {
+        // New file struct -> pass path
+    }
 }
 
 
