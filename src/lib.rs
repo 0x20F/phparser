@@ -1,4 +1,9 @@
+use walkdir::{WalkDir, DirEntry};
+use std::fmt::Display;
+
+
 pub struct Parser {}
+
 
 impl Parser {
     pub fn new() -> Parser {
@@ -16,8 +21,23 @@ impl Parser {
     }
 
 
-    pub fn parse_dir(&self, dir: &str) {
+    pub fn parse_dir(&self, dir: &str) -> Vec<DirEntry> {
         // Find all files and go down the parse chain
+        let walker = WalkDir::new(dir).into_iter();
+
+        // All files in the given directory
+        let mut files = vec![];
+
+        // Filter away the paths that aren't accessible
+        for entry in walker.filter_map(|e| e.ok()) {
+            if entry.path().is_dir() {
+                continue;
+            }
+
+            files.push(entry);
+        }
+
+        files
     }
 
 
