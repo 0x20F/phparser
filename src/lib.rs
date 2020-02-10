@@ -1,5 +1,4 @@
 use walkdir::{WalkDir, DirEntry};
-use std::fmt::Display;
 
 
 pub struct Parser {}
