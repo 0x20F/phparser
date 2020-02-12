@@ -1,4 +1,7 @@
+mod definitions;
+
 use walkdir::{WalkDir, DirEntry};
+use definitions::FileDef;
 
 
 pub struct Parser {}
@@ -40,8 +43,11 @@ impl Parser {
     }
 
 
-    pub fn parse_file(&self, file_path: String) {
+    pub fn parse_file(&self, file_path: String) -> FileDef {
         // New file struct -> pass path
+        let file = FileDef::new(file_path);
+
+        file
     }
 }
 
