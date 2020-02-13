@@ -37,8 +37,6 @@ fn test_parse_file() {
     let path = String::from(file_path);
     let file = parser.parse_file(path);
 
-    let path = String::from(file_path);
-
-    assert_eq!(path, file.path);
+    assert_eq!(file_path, file.path);
     assert_eq!(file_name, file.name);
 }
