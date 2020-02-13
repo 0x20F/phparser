@@ -10,4 +10,4 @@ edition = "2018"
 walkdir = "2"
 
 [dev-dependencies]
-paris = { git = "https://github.com/SirTheViking/paris" }
+logger = { git = "https://github.com/SirTheViking/paris" }
