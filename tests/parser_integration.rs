@@ -21,6 +21,9 @@ fn test_parse_dir() {
 fn test_parse_file() {
     let parser = Parser::new();
 
+    let file_path = "./tests/data/parse_file_test/one.php";
+    let file_name = "one.php";
+
     // You'll have to assert the count of:
     // classes
     //      functions
@@ -31,10 +34,11 @@ fn test_parse_file() {
     // dependents
 
     // For now just check if you get a thing back
-    let file_path = String::from("./tests/data/parse_file_test/one.php");
-    let file = parser.parse_file(file_path);
+    let path = String::from(file_path);
+    let file = parser.parse_file(path);
 
-    let path = String::from("./tests/data/parse_file_test/one.php");
+    let path = String::from(file_path);
 
     assert_eq!(path, file.path);
+    assert_eq!(file_name, file.name);
 }
