@@ -1,4 +1,5 @@
 use phparser::Parser;
+use std::path::Path;
 
 
 #[test]
@@ -11,7 +12,8 @@ fn test_instance() {
 fn test_parse_dir() {
     let parser = Parser::new();
 
-    let files = parser.parse_dir("./tests/data/parse_dir_test");
+    let path = Path::new("./tests/data/parse_dir_test");
+    let files = parser.parse_dir(&path);
 
     assert_eq!(3, files.len());
 }
@@ -21,7 +23,7 @@ fn test_parse_dir() {
 fn test_parse_file() {
     let parser = Parser::new();
 
-    let file_path = "./tests/data/parse_file_test/one.php";
+    let file_path = Path::new("./tests/data/parse_file_test/one.php");
     let file_name = "one.php";
 
     // You'll have to assert the count of:
@@ -34,8 +36,7 @@ fn test_parse_file() {
     // dependents
 
     // For now just check if you get a thing back
-    let path = String::from(file_path);
-    let file = parser.parse_file(path);
+    let file = parser.parse_file(file_path.to_path_buf());
 
     assert_eq!(file_path, file.path);
     assert_eq!(file_name, file.name);
