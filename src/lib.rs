@@ -1,7 +1,8 @@
 mod definitions;
 
-use walkdir::{WalkDir, DirEntry};
+use walkdir::{WalkDir};
 use definitions::FileDef;
+use std::path::{Path, PathBuf};
 
 
 pub struct Parser {}
@@ -18,12 +19,12 @@ impl Parser {
 
         // Walk through all items in each directory
         for dir in dirs {
-            self.parse_dir(dir);
+            self.parse_dir(Path::new(dir));
         }
     }
 
 
-    pub fn parse_dir(&self, dir: &str) -> Vec<DirEntry> {
+    pub fn parse_dir(&self, dir: &Path) -> Vec<FileDef> {
         // Find all files and go down the parse chain
         let walker = WalkDir::new(dir).into_iter();
 
@@ -36,14 +37,14 @@ impl Parser {
                 continue;
             }
 
-            files.push(entry);
+            files.push(self.parse_file(entry.path().to_owned()));
         }
 
         files
     }
 
 
-    pub fn parse_file(&self, file_path: String) -> FileDef {
+    pub fn parse_file(&self, file_path: PathBuf) -> FileDef {
         // New file struct -> pass path
         let file = FileDef::new(file_path);
 
