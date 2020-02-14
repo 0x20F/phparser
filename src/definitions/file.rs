@@ -7,8 +7,6 @@ use std::fmt::Display;
 pub struct FileDef {
     pub path: PathBuf,
     pub name: String,
-
-    // Save opened file here and close it when done?
 }
 
 
