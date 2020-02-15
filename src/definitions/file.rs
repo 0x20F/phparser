@@ -2,13 +2,14 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::{BufReader, SeekFrom};
 use std::path::{PathBuf};
-use crate::lexer::Lexer;
+use crate::lexer::{Lexer};
 
 
 
 
 pub struct FileStream {
-    pub buffer: BufReader<File>
+    pub buffer: BufReader<File>,
+    current_line: i64
 }
 
 
@@ -17,10 +18,11 @@ impl FileStream {
         // Make sure you fail gracefully here
         let file = File::open(path).unwrap();
 
-        let mut buffer = BufReader::new(file);
+        let buffer = BufReader::new(file);
 
         FileStream {
-            buffer
+            buffer,
+            current_line: 1
         }
     }
 
@@ -29,11 +31,17 @@ impl FileStream {
         // Seek back to the start so other things can use this same buffer
         // without reopening the file every time
         self.buffer.seek(SeekFrom::Start(0)).unwrap();
+        self.current_line = 1;
     }
 
 
-    pub fn goto(&mut self, position: u64) {
-        self.buffer.seek(SeekFrom::Start(position)).unwrap();
+    pub fn set_lines(&mut self, lines: i64) {
+        self.current_line = self.line + lines;
+    }
+
+
+    pub fn current_line(&self) -> i64 {
+        self.current_line
     }
 }
 

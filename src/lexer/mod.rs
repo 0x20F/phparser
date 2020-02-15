@@ -1,8 +1,6 @@
-use super::definitions::{FileDef, FileStream};
-use std::path::PathBuf;
-use std::io::{BufReader, Read, BufRead, Seek};
-use std::fs::File;
-use core::borrow::BorrowMut;
+use super::definitions::{FileStream};
+use std::io::{Read, BufRead};
+use core::borrow::{BorrowMut};
 
 
 pub enum Tokens {
@@ -27,25 +25,26 @@ impl Lexer {
 
 
     pub fn find_namespace(stream: &mut FileStream) -> Tokens {
-        let mut line_count = 0;
+
+        let mut token = Tokens::NotFound();
+        let mut line_number = stream.current_line();
+
 
         for line in stream.buffer.by_ref().lines() {
-            if line.is_err() {
-                // If one line in a file fails, all others probably will too
-                // so you should just return here to save time
-                // Don't forget to handle it properly on the other end
-                continue;
-            }
-
-            let line = line.unwrap();
+            let line = match line {
+                Ok(line) => line,
+                Err(_e) => break
+            };
 
             if line.contains("namespace") {
-                return Tokens::Namespace(line_count as i64);
+                token = Tokens::Namespace(line_number);
+                break;
             }
 
-            line_count = line_count + 1;
+            line_number = line_number + 1;
         }
 
-        Tokens::NotFound()
+        stream.set_lines(line_number);
+        token
     }
 }

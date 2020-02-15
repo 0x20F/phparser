@@ -1,6 +1,6 @@
 use phparser::lexer::{Lexer, Tokens};
 use phparser::definitions::FileStream;
-use std::path::{PathBuf, Path};
+use std::path::{Path};
 
 
 // Open a simple file stream for all functions to use
