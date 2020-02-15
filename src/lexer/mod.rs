@@ -6,7 +6,7 @@ use core::borrow::{BorrowMut};
 pub enum Tokens {
     NotFound(),
 
-    Namespace(i64)
+    Namespace(u64)
 }
 
 

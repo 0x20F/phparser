@@ -9,7 +9,7 @@ use crate::lexer::{Lexer};
 
 pub struct FileStream {
     pub buffer: BufReader<File>,
-    current_line: i64
+    current_line: u64
 }
 
 
@@ -35,12 +35,12 @@ impl FileStream {
     }
 
 
-    pub fn set_lines(&mut self, lines: i64) {
-        self.current_line = self.line + lines;
+    pub fn set_lines(&mut self, lines: u64) {
+        self.current_line = self.current_line + lines;
     }
 
 
-    pub fn current_line(&self) -> i64 {
+    pub fn current_line(&self) -> u64 {
         self.current_line
     }
 }
