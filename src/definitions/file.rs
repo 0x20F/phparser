@@ -1,8 +1,9 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::{BufReader, SeekFrom};
-use std::path::{Path, PathBuf};
-use std::fmt::Display;
+use std::path::{PathBuf};
+use crate::lexer::Lexer;
+
 
 pub struct FileDef {
     pub path: PathBuf,
