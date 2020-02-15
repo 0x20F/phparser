@@ -24,3 +24,24 @@ fn test_find_namespace() {
         _ => ()
     };
 }
+
+
+#[test]
+fn test_find_denendencies() {
+    let mut file = setup_stream("./tests/data/lexer_tests/dependency_test/use.php");
+
+    let dependencies = Lexer::find_dependencies(&mut file);
+
+    assert_eq!(3, dependencies.len());
+}
+
+
+#[test]
+fn test_find_classes() {
+    let mut file = setup_stream("./tests/data/lexer_tests/class_test/class.php");
+
+    let classes = Lexer::find_classes(&mut file);
+
+    // Need to account for both classStart and classEnd tokens
+    assert_eq!(6 * 2, classes.len());
+}
