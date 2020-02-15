@@ -8,7 +8,7 @@ use crate::lexer::Lexer;
 
 
 pub struct FileStream {
-    buffer: BufReader<File>
+    pub buffer: BufReader<File>
 }
 
 
@@ -53,7 +53,7 @@ impl FileDef {
         let name = FileDef::parse_name(&path);
         let mut stream = FileDef::open_file(&path);
 
-        let tokens = Lexer::tokenize(&stream);
+        let tokens = Lexer::tokenize(&mut stream);
 
 
         FileDef {
