@@ -1,5 +1,5 @@
-mod definitions;
-mod lexer;
+pub mod definitions;
+pub mod lexer;
 
 use walkdir::{WalkDir};
 use definitions::FileDef;
