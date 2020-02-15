@@ -1,5 +1,3 @@
-#![feature(seek_convenience)]
-
 pub mod definitions;
 pub mod lexer;
 
