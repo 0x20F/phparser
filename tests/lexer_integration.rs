@@ -1,4 +1,4 @@
-use phparser::lexer::{Lexer};
+use phparser::lexer::{Lexer, TokenType};
 use phparser::definitions::FileStream;
 use std::path::{Path};
 
@@ -11,12 +11,31 @@ fn setup_stream(path: &str) -> FileStream {
 
 
 #[test]
-fn test_parse_namespace() {
-    let namespace = "namespace This\\Is\\a\\PHP\\◊°∆˝¬º\\namespace;";
-    let line = 50;
+fn test_class_tokens() {
+    let mut stream = setup_stream("./tests/data/lexer_tests/class_test/class.php");
 
-    let parsed = Lexer::parse_namespace(namespace.to_string(), line);
+    let tokens = Lexer::tokenize(&mut stream);
 
-    assert_eq!(parsed.symbol, "This\\Is\\a\\PHP\\◊°∆˝¬º\\namespace");
-    assert_eq!(parsed.line, line);
+    assert_eq!(6 * 2, tokens.len());
+}
+
+
+#[test]
+fn test_function_tokens() {
+    let mut stream = setup_stream("./tests/data/lexer_tests/function_test/fun.php");
+
+    let tokens = Lexer::tokenize(&mut stream);
+
+    let expected = 8;
+    let mut counter = 0;
+
+    for token in tokens {
+        match token.token {
+            TokenType::MethodStart => counter = counter + 1,
+            TokenType::FunctionStart => counter = counter + 1,
+            _ => continue
+        };
+    }
+
+    assert_eq!(expected, counter);
 }

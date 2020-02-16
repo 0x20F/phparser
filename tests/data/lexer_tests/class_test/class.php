@@ -1,8 +1,5 @@
 <?php
 
-namespace test\space;
-
-
 class one
 {
 
@@ -15,18 +12,9 @@ class three {
 }
 
 class four {
-    function aye() {
-        {}
-        {}
-        {}{}{}{}
-        {}{}{}{}
-        // Code blocks to try and mess with the lexer
-    }
 }
 
 class five {{{{{{{{{{{{}}}}}}}}}}}}
-
-use magic/lalala;
 
 class six {
     <html></html>
