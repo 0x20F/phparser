@@ -8,6 +8,8 @@ edition = "2018"
 
 [dependencies]
 walkdir = "2"
+lazy_static = "1.4.0"
+regex = "1"
 
 [dev-dependencies]
 logger = { git = "https://github.com/SirTheViking/paris" }
