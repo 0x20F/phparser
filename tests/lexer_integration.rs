@@ -1,4 +1,4 @@
-use phparser::lexer::{Lexer, TokenType};
+use phparser::lexer::{Lexer, Token};
 use phparser::definitions::FileStream;
 use std::path::{Path};
 
@@ -34,9 +34,9 @@ fn test_function_tokens() {
     let mut counter = 0;
 
     for token in tokens {
-        match token.token {
-            TokenType::MethodStart => counter = counter + 1,
-            TokenType::FunctionStart => counter = counter + 1,
+        match token {
+            Token::MethodStart(_) => counter = counter + 1,
+            Token::FunctionStart(_) => counter = counter + 1,
             _ => continue
         };
     }

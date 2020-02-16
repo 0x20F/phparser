@@ -6,35 +6,18 @@ use regex::Regex;
 
 
 
-pub enum TokenType {
-    NotFound,
+pub enum Token {
+    Namespace(u64),
+    Use(u64),
 
-    Namespace,
-    Use,
+    ClassStart(u64),
+    ClassEnd(u64),
 
-    ClassStart,
-    ClassEnd,
+    MethodStart(u64),
+    MethodEnd(u64),
 
-    MethodStart,
-    MethodEnd,
-
-    FunctionStart,
-    FunctionEnd
-}
-
-
-pub struct Token {
-    pub token: TokenType,
-    pub line: u64
-}
-
-impl Token {
-    pub fn new(token: TokenType, line: u64) -> Token {
-        Token {
-            token,
-            line
-        }
-    }
+    FunctionStart(u64),
+    FunctionEnd(u64)
 }
 
 
@@ -78,14 +61,14 @@ impl Lexer {
 
             // Parse namespace if it hasn't been parsed already
             if !n && namespace_declaration.is_match(&line) {
-                tokens.push(Token::new(TokenType::Namespace, line_number));
+                tokens.push(Token::Namespace(line_number));
                 n = true;
             }
 
 
             // Check if this is a class declaration only if not already in a function or class
             if !f && !c && line.starts_with("class") {
-                tokens.push(Token::new(TokenType::ClassStart, line_number));
+                tokens.push(Token::ClassStart(line_number));
                 c = true;
             }
 
@@ -93,9 +76,9 @@ impl Lexer {
             // Check if this is a function declaration only if not already in a function
             if !f && function_declaration.is_match(&line) {
                 if c {
-                    tokens.push(Token::new(TokenType::MethodStart, line_number));
+                    tokens.push(Token::MethodStart(line_number));
                 } else {
-                    tokens.push(Token::new(TokenType::FunctionStart, line_number));
+                    tokens.push(Token::FunctionStart(line_number));
                 }
 
                 f = true;
@@ -109,19 +92,19 @@ impl Lexer {
 
                 if stack.len() == 0 {
                     if c {
-                        tokens.push(Token::new(TokenType::ClassEnd, line_number));
+                        tokens.push(Token::ClassEnd(line_number));
                         c = false;
                     }
 
                     if f {
-                        tokens.push(Token::new(TokenType::FunctionEnd, line_number));
+                        tokens.push(Token::FunctionEnd(line_number));
                         f = false;
                     }
                 }
 
                 if stack.len() == 1 {
                     if f {
-                        tokens.push(Token::new(TokenType::FunctionEnd, line_number));
+                        tokens.push(Token::FunctionEnd(line_number));
                         f = false;
                     }
                 }
