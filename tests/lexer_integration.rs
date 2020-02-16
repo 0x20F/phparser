@@ -10,6 +10,8 @@ fn setup_stream(path: &str) -> FileStream {
 }
 
 
+
+
 #[test]
 fn test_class_tokens() {
     let mut stream = setup_stream("./tests/data/lexer_tests/class_test/class.php");
@@ -18,6 +20,8 @@ fn test_class_tokens() {
 
     assert_eq!(6 * 2, tokens.len());
 }
+
+
 
 
 #[test]
