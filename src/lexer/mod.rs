@@ -1,5 +1,5 @@
 use super::definitions::{FileStream};
-use std::io::{Read, BufRead};
+use std::io::{Read, BufRead, Seek};
 use regex::Regex;
 
 
@@ -41,7 +41,7 @@ impl Lexer {
         let mut tokens: Vec<Token> = vec![];
         let mut stack: Vec<bool> = vec![];
 
-        let mut line_number = stream.current_line();
+        let mut position = 2;
 
         /*
             Flags:
@@ -61,14 +61,14 @@ impl Lexer {
 
             // Parse namespace if it hasn't been parsed already
             if !n && namespace_declaration.is_match(&line) {
-                tokens.push(Token::Namespace(line_number));
+                tokens.push(Token::Namespace(position));
                 n = true;
             }
 
 
             // Check if this is a class declaration only if not already in a function or class
             if !f && !c && line.starts_with("class") {
-                tokens.push(Token::ClassStart(line_number));
+                tokens.push(Token::ClassStart(position));
                 c = true;
             }
 
@@ -76,9 +76,9 @@ impl Lexer {
             // Check if this is a function declaration only if not already in a function
             if !f && function_declaration.is_match(&line) {
                 if c {
-                    tokens.push(Token::MethodStart(line_number));
+                    tokens.push(Token::MethodStart(position));
                 } else {
-                    tokens.push(Token::FunctionStart(line_number));
+                    tokens.push(Token::FunctionStart(position));
                 }
 
                 f = true;
@@ -92,25 +92,25 @@ impl Lexer {
 
                 if stack.len() == 0 {
                     if c {
-                        tokens.push(Token::ClassEnd(line_number));
+                        tokens.push(Token::ClassEnd(position));
                         c = false;
                     }
 
                     if f {
-                        tokens.push(Token::FunctionEnd(line_number));
+                        tokens.push(Token::FunctionEnd(position));
                         f = false;
                     }
                 }
 
                 if stack.len() == 1 {
                     if f {
-                        tokens.push(Token::FunctionEnd(line_number));
+                        tokens.push(Token::FunctionEnd(position));
                         f = false;
                     }
                 }
             }
 
-            line_number = line_number + 1;
+            position = position + line.len() as u64;
         }
 
 
