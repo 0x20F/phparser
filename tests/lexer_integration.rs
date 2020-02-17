@@ -13,6 +13,18 @@ fn setup_stream(path: &str) -> FileStream {
 
 
 #[test]
+fn test_namespace_tokens() {
+    let mut stream = setup_stream("./tests/data/lexer_tests/namespace_test/namespace.php");
+
+    let tokens = Lexer::tokenize(&mut stream);
+
+    assert_eq!(1, tokens.len());
+}
+
+
+
+
+#[test]
 fn test_class_tokens() {
     let mut stream = setup_stream("./tests/data/lexer_tests/class_test/class.php");
 
