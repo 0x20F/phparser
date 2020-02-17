@@ -35,8 +35,9 @@ impl FileStream {
     }
 
 
-    pub fn set_lines(&mut self, lines: u64) {
-        self.current_line = self.current_line + lines;
+    pub fn goto(&mut self, line: u64) {
+        self.buffer.seek(SeekFrom::Start(line)).unwrap();
+        self.current_line = line;
     }
 
 
@@ -59,13 +60,16 @@ impl FileDef {
     pub fn new(path: PathBuf) -> FileDef {
 
         let name = FileDef::parse_name(&path);
+        let mut namespace = None;
         let mut stream = FileDef::open_file(&path);
 
         let tokens = Lexer::tokenize(&mut stream);
 
         for token in tokens {
             match token {
-                Token::Namespace(line) => println!("Namespace is on line {}", line),
+                Token::Namespace(line) => {
+                    namespace = Some(FileDef::parse_namespace(line, &mut stream));
+                },
                 _ => break
             }
         }
@@ -86,6 +90,15 @@ impl FileDef {
             .collect();
 
         pieces.last().unwrap().to_string()
+    }
+
+
+    fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
+        stream.goto(line);
+
+        let mut lines = stream.buffer.by_ref().lines();
+
+        lines.next().unwrap().unwrap()
     }
 
 
