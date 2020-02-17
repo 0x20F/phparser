@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::{BufReader, SeekFrom};
 use std::path::{PathBuf};
-use crate::lexer::{Lexer};
+use crate::lexer::{Lexer, Token};
 
 
 
@@ -62,6 +62,13 @@ impl FileDef {
         let mut stream = FileDef::open_file(&path);
 
         let tokens = Lexer::tokenize(&mut stream);
+
+        for token in tokens {
+            match token {
+                Token::Namespace(line) => println!("Namespace is on line {}", line),
+                _ => break
+            }
+        }
 
 
         FileDef {
