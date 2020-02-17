@@ -29,11 +29,11 @@ pub struct Lexer {}
 impl Lexer {
     pub fn tokenize(stream: &mut FileStream) -> Vec<Token> {
         lazy_static! {
-            static ref namespace_declaration: Regex =
+            static ref NAMESPACE: Regex =
                 Regex::new("(?:namespace )(.*)(?:;)")
                 .unwrap();
 
-            static ref function_declaration: Regex =
+            static ref FUNCTION: Regex =
                 Regex::new("(?:public|private|protected|^)( *)?(?:static )?function (?:[A-Za-z0-9]+)\\(")
                 .unwrap();
         }
@@ -60,7 +60,7 @@ impl Lexer {
             };
 
             // Parse namespace if it hasn't been parsed already
-            if !n && namespace_declaration.is_match(&line) {
+            if !n && NAMESPACE.is_match(&line) {
                 tokens.push(Token::Namespace(position));
                 n = true;
             }
@@ -74,7 +74,7 @@ impl Lexer {
 
 
             // Check if this is a function declaration only if not already in a function
-            if !f && function_declaration.is_match(&line) {
+            if !f && FUNCTION.is_match(&line) {
                 if c {
                     tokens.push(Token::MethodStart(position));
                 } else {
