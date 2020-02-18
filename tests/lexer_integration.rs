@@ -30,7 +30,7 @@ fn test_class_tokens() {
 
     let tokens = Lexer::tokenize(&mut stream);
 
-    assert_eq!(6 * 2, tokens.len());
+    assert_eq!(6, tokens.len());
 }
 
 
@@ -47,8 +47,8 @@ fn test_function_tokens() {
 
     for token in tokens {
         match token {
-            Token::MethodStart(_) => counter = counter + 1,
-            Token::FunctionStart(_) => counter = counter + 1,
+            Token::Method(_, _) => counter = counter + 1,
+            Token::Function(_, _) => counter = counter + 1,
             _ => continue
         };
     }
