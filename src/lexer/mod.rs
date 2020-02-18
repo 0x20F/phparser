@@ -41,7 +41,7 @@ impl Lexer {
         let mut tokens: Vec<Token> = vec![];
         let mut stack: Vec<bool> = vec![];
 
-        let mut position = 2;
+        let mut position = 0;
 
         /*
             Flags:
@@ -110,7 +110,8 @@ impl Lexer {
                 }
             }
 
-            position = position + line.len() as u64;
+            // +1 to account for the newline character that the buffer removes
+            position = (position + line.len() as u64) + 1;
         }
 
 
