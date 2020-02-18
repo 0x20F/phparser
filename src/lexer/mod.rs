@@ -12,11 +12,9 @@ pub enum Token {
 
     Class(u64, u64),
 
-    MethodStart(u64),
-    MethodEnd(u64),
+    Method(u64, u64),
 
-    FunctionStart(u64),
-    FunctionEnd(u64)
+    Function(u64, u64)
 }
 
 
@@ -54,7 +52,12 @@ impl Lexer {
             cs => class start position
             ce => class end position
         */
-        let (mut cs, mut ce) = (u64, u64);
+        let (mut cs, mut ce) = (0, 0);
+        /*
+            fs => function/method start position
+            fe => function/method end position
+        */
+        let (mut fs, mut fe) = (0, 0);
 
         
         for line in stream.buffer.by_ref().lines() {
@@ -79,12 +82,7 @@ impl Lexer {
 
             // Check if this is a function declaration only if not already in a function
             if !f && FUNCTION.is_match(&line) {
-                if c {
-                    tokens.push(Token::MethodStart(position));
-                } else {
-                    tokens.push(Token::FunctionStart(position));
-                }
-
+                fs = position;
                 f = true;
             }
 
@@ -102,14 +100,22 @@ impl Lexer {
                     }
 
                     if f {
-                        tokens.push(Token::FunctionEnd(position));
+                        fe = position;
+                        tokens.push(Token::Function(fs, fe));
                         f = false;
                     }
                 }
 
                 if stack.len() == 1 {
                     if f {
-                        tokens.push(Token::FunctionEnd(position));
+                        fe = position;
+
+                        if c {
+                            tokens.push(Token::Method(fs, fe));
+                        } else {
+                            tokens.push(Token::Function(fs, fe));
+                        }
+
                         f = false;
                     }
                 }
