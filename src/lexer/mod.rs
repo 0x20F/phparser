@@ -1,5 +1,5 @@
 use super::definitions::{FileStream};
-use std::io::{Read, BufRead, Seek};
+use std::io::{Read, BufRead};
 use regex::Regex;
 
 
@@ -50,14 +50,13 @@ impl Lexer {
         let (mut n, mut c, mut f) = (false, false, false);
         /*
             cs => class start position
-            ce => class end position
-        */
-        let (mut cs, mut ce) = (0, 0);
-        /*
             fs => function/method start position
+
+            ce => class end position
             fe => function/method end position
         */
-        let (mut fs, mut fe) = (0, 0);
+        let (mut cs, mut fs) = (0, 0);
+        let (mut ce, mut fe);
 
         
         for line in stream.buffer.by_ref().lines() {
