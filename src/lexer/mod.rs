@@ -10,8 +10,7 @@ pub enum Token {
     Namespace(u64),
     Use(u64),
 
-    ClassStart(u64),
-    ClassEnd(u64),
+    Class(u64, u64),
 
     MethodStart(u64),
     MethodEnd(u64),
@@ -51,6 +50,11 @@ impl Lexer {
             f => currently inside a function
         */
         let (mut n, mut c, mut f) = (false, false, false);
+        /*
+            cs => class start position
+            ce => class end position
+        */
+        let (mut cs, mut ce) = (u64, u64);
 
         
         for line in stream.buffer.by_ref().lines() {
@@ -68,7 +72,7 @@ impl Lexer {
 
             // Check if this is a class declaration only if not already in a function or class
             if !f && !c && line.starts_with("class") {
-                tokens.push(Token::ClassStart(position));
+                cs = position;
                 c = true;
             }
 
@@ -92,7 +96,8 @@ impl Lexer {
 
                 if stack.len() == 0 {
                     if c {
-                        tokens.push(Token::ClassEnd(position));
+                        ce = position;
+                        tokens.push(Token::Class(cs, ce));
                         c = false;
                     }
 
