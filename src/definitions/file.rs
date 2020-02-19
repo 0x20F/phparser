@@ -39,11 +39,6 @@ impl FileStream {
         self.buffer.seek(SeekFrom::Start(line)).unwrap();
         self.current_line = line;
     }
-
-
-    pub fn current_line(&self) -> u64 {
-        self.current_line
-    }
 }
 
 
@@ -59,8 +54,9 @@ pub struct FileDef {
 impl FileDef {
     pub fn new(path: PathBuf) -> FileDef {
 
+        let mut namespace: Option<String> = None;
+
         let name = FileDef::parse_name(&path);
-        let mut namespace = None;
         let mut stream = FileDef::open_file(&path);
 
         let tokens = Lexer::tokenize(&mut stream);
@@ -70,6 +66,7 @@ impl FileDef {
                 Token::Namespace(line) => {
                     namespace = Some(FileDef::parse_namespace(line, &mut stream));
                 },
+                Token::Class(start, end) => println!("Class starts on {} and ends on {}", start, end),
                 _ => break
             }
         }
@@ -96,6 +93,7 @@ impl FileDef {
     fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
         stream.goto(line);
 
+        // Getting all the lines might not be a good idea here
         let mut lines = stream.buffer.by_ref().lines();
 
         lines.next().unwrap().unwrap()
