@@ -79,10 +79,11 @@ impl FileDef {
 
         for token in tokens {
             match token {
-                Token::Namespace(line) => {
-                    namespace = FileDef::parse_namespace(line, &mut stream);
+                Token::Namespace(pos) => {
+                    namespace = FileDef::parse_namespace(pos, &mut stream);
                 },
-                Token::Class(start, end) => println!("Class starts on {} and ends on {}", start, end),
+                Token::ClassStart(pos) => println!("Class starts on {}", pos),
+                Token::ClassEnd(pos) => println!("Class ends on {}", pos),
                 _ => break
             }
         }

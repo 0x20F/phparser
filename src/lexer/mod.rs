@@ -10,7 +10,8 @@ pub enum Token {
     Namespace(u64),
     Use(u64),
 
-    Class(u64, u64),
+    ClassStart(u64),
+    ClassEnd(u64),
 
     Method(u64, u64),
 
@@ -94,7 +95,8 @@ impl Lexer {
                 if stack.len() == 0 {
                     if c {
                         ce = position;
-                        tokens.push(Token::Class(cs, ce));
+                        tokens.push(Token::ClassStart(cs));
+                        tokens.push(Token::ClassEnd(ce));
                         c = false;
                     }
 
