@@ -36,9 +36,12 @@ impl FileStream {
 
 
     pub fn goto(&mut self, line: u64) {
+        if line > self.position {
+            self.buffer.seek(SeekFrom::Current(line as i64)).unwrap();
+        } else {
+            self.buffer.seek(SeekFrom::Start(line)).unwrap();
+        }
 
-        // Maybe seek from current here instead
-        self.buffer.seek(SeekFrom::Start(line)).unwrap();
         self.position = line;
     }
 
@@ -49,7 +52,6 @@ impl FileStream {
         // Get everything 'til the end of the line
         self.buffer.by_ref().read_until(b'\n', &mut buf).unwrap();
 
-        // Maybe I should do something if this fails, or just let it burn
         String::from_utf8(buf).ok()
     }
 }
