@@ -47,7 +47,7 @@ impl FileStream {
 
 
     pub fn next_line(&mut self) -> String {
-        let mut buf: String = vec![];
+        let mut buf: String = String::from("");
 
         self.buffer.by_ref().read_line(&mut buf).unwrap();
         buf
@@ -78,8 +78,7 @@ impl FileDef {
         for token in tokens {
             match token {
                 Token::Namespace(pos) => {
-                    let n = FileDef::parse_namespace(pos, &mut stream);
-                    namespace = Some(n);
+                    namespace = Some(FileDef::parse_namespace(pos, &mut stream));
                 },
                 Token::ClassStart(pos) => println!("Class starts on {}", pos),
                 Token::ClassEnd(pos) => println!("Class ends on {}", pos),
