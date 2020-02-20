@@ -39,6 +39,14 @@ impl FileStream {
         self.buffer.seek(SeekFrom::Start(line)).unwrap();
         self.position = line;
     }
+
+
+    pub fn next_line(&mut self) -> String {
+        // Getting all the lines might not be a good idea here
+        let mut lines = self.buffer.by_ref().lines();
+
+        lines.next().unwrap().unwrap()
+    }
 }
 
 
@@ -92,11 +100,7 @@ impl FileDef {
 
     fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
         stream.goto(line);
-
-        // Getting all the lines might not be a good idea here
-        let mut lines = stream.buffer.by_ref().lines();
-
-        lines.next().unwrap().unwrap()
+        stream.next_line()
     }
 
 
