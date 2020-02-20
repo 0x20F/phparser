@@ -9,7 +9,7 @@ use crate::lexer::{Lexer, Token};
 
 pub struct FileStream {
     pub buffer: BufReader<File>,
-    current_line: u64
+    position: u64
 }
 
 
@@ -22,7 +22,7 @@ impl FileStream {
 
         FileStream {
             buffer,
-            current_line: 1
+            position: 0
         }
     }
 
@@ -31,13 +31,13 @@ impl FileStream {
         // Seek back to the start so other things can use this same buffer
         // without reopening the file every time
         self.buffer.seek(SeekFrom::Start(0)).unwrap();
-        self.current_line = 1;
+        self.position = 0;
     }
 
 
     pub fn goto(&mut self, line: u64) {
         self.buffer.seek(SeekFrom::Start(line)).unwrap();
-        self.current_line = line;
+        self.position = line;
     }
 }
 

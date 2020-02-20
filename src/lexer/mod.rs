@@ -86,7 +86,7 @@ impl Lexer {
             }
 
 
-
+            // Don't think this'll work if everything is on the same line
             if line.contains('{') { stack.push(true); }
             if line.contains('}') {
                 stack.pop();
