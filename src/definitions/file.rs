@@ -36,16 +36,21 @@ impl FileStream {
 
 
     pub fn goto(&mut self, line: u64) {
+
+        // Maybe seek from current here instead
         self.buffer.seek(SeekFrom::Start(line)).unwrap();
         self.position = line;
     }
 
 
-    pub fn next_line(&mut self) -> String {
-        // Getting all the lines might not be a good idea here
-        let mut lines = self.buffer.by_ref().lines();
+    pub fn next_line(&mut self) -> Option<String> {
+        let mut buf: Vec<u8> = vec![];
 
-        lines.next().unwrap().unwrap()
+        // Get everything 'til the end of the line
+        self.buffer.by_ref().read_until(b'\n', &mut buf).unwrap();
+
+        // Maybe I should do something if this fails, or just let it burn
+        String::from_utf8(buf).ok()
     }
 }
 
@@ -56,13 +61,14 @@ impl FileStream {
 pub struct FileDef {
     pub path: PathBuf,
     pub name: String,
+    pub namespace: Option<String>
 }
 
 
 impl FileDef {
     pub fn new(path: PathBuf) -> FileDef {
 
-        let mut namespace: Option<String> = None;
+        let mut namespace = None;
 
         let name = FileDef::parse_name(&path);
         let mut stream = FileDef::open_file(&path);
@@ -72,7 +78,7 @@ impl FileDef {
         for token in tokens {
             match token {
                 Token::Namespace(line) => {
-                    namespace = Some(FileDef::parse_namespace(line, &mut stream));
+                    namespace = FileDef::parse_namespace(line, &mut stream);
                 },
                 Token::Class(start, end) => println!("Class starts on {} and ends on {}", start, end),
                 _ => break
@@ -82,7 +88,8 @@ impl FileDef {
 
         FileDef {
             path,
-            name
+            name,
+            namespace
         }
     }
 
@@ -98,9 +105,9 @@ impl FileDef {
     }
 
 
-    fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
+    fn parse_namespace(line: u64, stream: &mut FileStream) -> Option<String> {
         stream.goto(line);
-        stream.next_line()
+        stream.next_line() // For now, gonna need to actually get the namespace from that line
     }
 
 
