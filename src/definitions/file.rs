@@ -46,13 +46,11 @@ impl FileStream {
     }
 
 
-    pub fn next_line(&mut self) -> Option<String> {
-        let mut buf: Vec<u8> = vec![];
+    pub fn next_line(&mut self) -> String {
+        let mut buf: String = vec![];
 
-        // Get everything 'til the end of the line
-        self.buffer.by_ref().read_until(b'\n', &mut buf).unwrap();
-
-        String::from_utf8(buf).ok()
+        self.buffer.by_ref().read_line(&mut buf).unwrap();
+        buf
     }
 }
 
@@ -80,7 +78,8 @@ impl FileDef {
         for token in tokens {
             match token {
                 Token::Namespace(pos) => {
-                    namespace = FileDef::parse_namespace(pos, &mut stream);
+                    let n = FileDef::parse_namespace(pos, &mut stream);
+                    namespace = Some(n);
                 },
                 Token::ClassStart(pos) => println!("Class starts on {}", pos),
                 Token::ClassEnd(pos) => println!("Class ends on {}", pos),
@@ -108,9 +107,11 @@ impl FileDef {
     }
 
 
-    fn parse_namespace(line: u64, stream: &mut FileStream) -> Option<String> {
+    fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
         stream.goto(line);
-        stream.next_line() // For now, gonna need to actually get the namespace from that line
+
+        // For now, gonna need to actually get the namespace from that line
+        stream.next_line()
     }
 
 
