@@ -3,13 +3,13 @@ use std::path::Path;
 
 
 #[test]
-fn test_instance() {
+fn instance() {
     Parser::new();
 }
 
 
 #[test]
-fn test_parse_dir() {
+fn parse_dir() {
     let parser = Parser::new();
 
     let path = Path::new("./tests/data/parse_dir_test");
@@ -20,7 +20,7 @@ fn test_parse_dir() {
 
 
 #[test]
-fn test_parse_file() {
+fn parse_file() {
     let parser = Parser::new();
 
     let file_path = Path::new("./tests/data/parse_file_test/one.php");

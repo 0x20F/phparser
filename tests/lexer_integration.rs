@@ -13,7 +13,7 @@ fn setup_stream(path: &str) -> FileStream {
 
 
 #[test]
-fn test_namespace_tokens() {
+fn namespace_tokens() {
     let mut stream = setup_stream("./tests/data/lexer_tests/namespace_test/namespace.php");
 
     let tokens = Lexer::tokenize(&mut stream);
@@ -25,7 +25,7 @@ fn test_namespace_tokens() {
 
 
 #[test]
-fn test_class_tokens() {
+fn class_tokens() {
     let mut stream = setup_stream("./tests/data/lexer_tests/class_test/class.php");
 
     let tokens = Lexer::tokenize(&mut stream);
@@ -37,7 +37,7 @@ fn test_class_tokens() {
 
 
 #[test]
-fn test_function_tokens() {
+fn function_tokens() {
     let mut stream = setup_stream("./tests/data/lexer_tests/function_test/fun.php");
 
     let tokens = Lexer::tokenize(&mut stream);
