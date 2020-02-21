@@ -35,7 +35,7 @@ impl FileStream {
     }
 
 
-    pub fn goto(&mut self, line: u64) {
+    pub fn jump_to(&mut self, line: u64) {
         if line > self.position {
             self.buffer.seek(SeekFrom::Current(line as i64)).unwrap();
         } else {
@@ -107,7 +107,7 @@ impl FileDef {
 
 
     fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
-        stream.goto(line);
+        stream.jump_to(line);
 
         // For now, gonna need to actually get the namespace from that line
         stream.next_line()
