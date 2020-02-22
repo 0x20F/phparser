@@ -76,7 +76,7 @@ impl Lexer {
 
             // Parse dependency if they haven't been parsed already
             if !f && !c && !u && line.starts_with("use") {
-
+                tokens.push(Token::Use(position));
             }
 
 
@@ -98,6 +98,13 @@ impl Lexer {
             if line.contains('{') { stack.push(true); }
             if line.contains('}') {
                 stack.pop();
+
+                // If we're already in a class or function
+                // we shouldn't expect any import statements from here
+                // on out
+                if c || f {
+                    u = true;
+                }
 
                 if stack.len() == 0 {
                     if c {
