@@ -99,11 +99,11 @@ impl Lexer {
             if line.contains('}') {
                 stack.pop();
 
-                // If we're already in a class or function
-                // we shouldn't expect any import statements from here
-                // on out
+                // If we're already in a class or function we shouldn't
+                // expect any import or namespace statements anymore
                 if c || f {
                     u = true;
+                    n = true;
                 }
 
                 if stack.len() == 0 {
