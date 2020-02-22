@@ -8,7 +8,7 @@ use regex::Regex;
 
 pub enum Token {
     Namespace(u64),
-    Use(u64),
+    Use(u64), // Will probably need support for PHP7 soon
 
     ClassStart(u64),
     ClassEnd(u64),
@@ -47,8 +47,9 @@ impl Lexer {
             n => namespace already done
             c => currently inside a class
             f => currently inside a function
+            u => use/import statements have already been parsed
         */
-        let (mut n, mut c, mut f) = (false, false, false);
+        let (mut n, mut c, mut f, mut u) = (false, false, false, false);
         /*
             cs => class start position
             fs => function/method start position
@@ -70,6 +71,12 @@ impl Lexer {
             if !n && NAMESPACE.is_match(&line) {
                 tokens.push(Token::Namespace(position));
                 n = true;
+            }
+
+
+            // Parse dependency if they haven't been parsed already
+            if !f && !c && !u && line.starts_with("use") {
+
             }
 
 
