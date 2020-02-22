@@ -63,12 +63,14 @@ fn function_tokens() {
 
     let tokens = Lexer::tokenize(&mut stream);
 
-    let expected = 8;
+    let expected = 13;
     let mut counter = 0;
 
     for token in tokens {
         match token {
-            Token::Method(_, _) => counter = counter + 1,
+            Token::MethodStart(_) => counter = counter + 1,
+            Token::MethodEnd(_) => counter = counter + 1,
+
             Token::Function(_, _) => counter = counter + 1,
             _ => continue
         };

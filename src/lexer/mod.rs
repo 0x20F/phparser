@@ -13,7 +13,8 @@ pub enum Token {
     ClassStart(u64),
     ClassEnd(u64),
 
-    Method(u64, u64),
+    MethodStart(u64),
+    MethodEnd(u64),
 
     Function(u64, u64)
 }
@@ -126,8 +127,10 @@ impl Lexer {
                         fe = position;
 
                         if c {
-                            tokens.push(Token::Method(fs, fe));
+                            tokens.push(Token::MethodStart(fs));
+                            tokens.push(Token::MethodEnd(fe));
                         } else {
+                            // This should never happen?
                             tokens.push(Token::Function(fs, fe));
                         }
 
