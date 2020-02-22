@@ -47,9 +47,10 @@ impl FileStream {
 
 
     pub fn next_line(&mut self) -> String {
-        let mut buf: String = String::from("");
+        let mut buf: String = String::new();
 
-        self.buffer.by_ref().read_line(&mut buf).unwrap();
+        self.buffer.read_line(&mut buf).unwrap();
+
         buf
     }
 }
@@ -69,6 +70,7 @@ impl FileDef {
     pub fn new(path: PathBuf) -> FileDef {
 
         let mut namespace = None;
+        let mut dependencies = vec![];
 
         let name = FileDef::parse_name(&path);
         let mut stream = FileDef::open_file(&path);
@@ -80,6 +82,11 @@ impl FileDef {
                 Token::Namespace(pos) => {
                     namespace = Some(FileDef::parse_namespace(pos, &mut stream));
                 },
+
+                Token::Use(pos) => {
+                    dependencies.push(FileDef::parse_dependency(pos, &mut stream));
+                },
+
                 Token::ClassStart(pos) => println!("Class starts on {}", pos),
                 Token::ClassEnd(pos) => println!("Class ends on {}", pos),
                 _ => break
@@ -110,6 +117,14 @@ impl FileDef {
         stream.jump_to(line);
 
         // For now, gonna need to actually get the namespace from that line
+        stream.next_line()
+    }
+
+
+    fn parse_dependency(line: u64, stream: &mut FileStream) -> String {
+        stream.jump_to(line);
+
+        // Need to parse imported namespace from this line
         stream.next_line()
     }
 
