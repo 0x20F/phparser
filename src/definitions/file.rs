@@ -36,11 +36,7 @@ impl FileStream {
 
 
     pub fn jump_to(&mut self, line: u64) {
-        if line > self.position {
-            self.buffer.seek(SeekFrom::Current(line as i64)).unwrap();
-        } else {
-            self.buffer.seek(SeekFrom::Start(line)).unwrap();
-        }
+        self.buffer.seek(SeekFrom::Start(line)).unwrap();
 
         self.position = line;
     }
