@@ -25,6 +25,27 @@ fn namespace_tokens() {
 
 
 #[test]
+fn use_tokens() {
+    let mut stream = setup_stream("./tests/data/lexer_tests/use_test/use.php");
+
+    let tokens = Lexer::tokenize(&mut stream);
+
+    let mut count = 0;
+
+    for token in tokens {
+        match token {
+            Token::Use(_) => count = count + 1,
+            _ => continue
+        };
+    }
+
+    assert_eq!(3, count);
+}
+
+
+
+
+#[test]
 fn class_tokens() {
     let mut stream = setup_stream("./tests/data/lexer_tests/class_test/class.php");
 
