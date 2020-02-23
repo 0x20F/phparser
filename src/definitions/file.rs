@@ -58,7 +58,8 @@ impl FileStream {
 pub struct FileDef {
     pub path: PathBuf,
     pub name: String,
-    pub namespace: Option<String>
+    pub namespace: Option<String>,
+    pub dependencies: Vec<String>
 }
 
 
@@ -66,6 +67,9 @@ impl FileDef {
     pub fn new(path: PathBuf) -> FileDef {
 
         let mut namespace = None;
+        // Dependencies should be references to the files that contain the classes?
+        // or maybe just have a function find_dependencies() that returns a list
+        // of file object references?
         let mut dependencies = vec![];
 
         let name = FileDef::parse_name(&path);
@@ -93,7 +97,8 @@ impl FileDef {
         FileDef {
             path,
             name,
-            namespace
+            namespace,
+            dependencies
         }
     }
 
