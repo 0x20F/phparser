@@ -132,7 +132,7 @@ impl FileDef {
 
 
     fn extract_path(declaration: String) -> String {
-        let keywords: Vec<&str> = definition.split(' ').collect();
+        let keywords: Vec<&str> = declaration.split(' ').collect();
 
         let path = keywords.last().unwrap();
         let path = path.trim().trim_end_matches(';');
