@@ -69,7 +69,7 @@ impl FileDef {
         let mut dependencies = vec![];
 
         let name = FileDef::parse_name(&path);
-        let mut stream = FileDef::open_file(&path);
+        let mut stream = FileStream::new(&path);
 
         let tokens = Lexer::tokenize(&mut stream);
 
@@ -124,11 +124,6 @@ impl FileDef {
         let declaration = stream.next_line();
 
         FileDef::extract_path(declaration)
-    }
-
-
-    fn open_file(path: &PathBuf) -> FileStream {
-        FileStream::new(path)
     }
 
 
