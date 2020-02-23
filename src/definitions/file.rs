@@ -112,8 +112,13 @@ impl FileDef {
     fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
         stream.jump_to(line);
 
-        // For now, gonna need to actually get the namespace from that line
-        stream.next_line()
+        let definition = stream.next_line();
+        let keywords: Vec<&str> = definition.split(' ').collect();
+
+        let namespace = keywords.last().unwrap();
+        let namespace = namespace.trim().trim_end_matches(";");
+
+        namespace.to_string()
     }
 
 
