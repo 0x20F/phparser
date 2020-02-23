@@ -112,17 +112,18 @@ impl FileDef {
     fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
         stream.jump_to(line);
 
-        let definition = stream.next_line();
+        let declaration = stream.next_line();
 
-        FileDef::extract_path(definition)
+        FileDef::extract_path(declaration)
     }
 
 
     fn parse_dependency(line: u64, stream: &mut FileStream) -> String {
         stream.jump_to(line);
 
-        // Need to parse imported namespace from this line
-        stream.next_line()
+        let declaration = stream.next_line();
+
+        FileDef::extract_path(declaration)
     }
 
 
