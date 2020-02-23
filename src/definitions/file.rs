@@ -113,12 +113,8 @@ impl FileDef {
         stream.jump_to(line);
 
         let definition = stream.next_line();
-        let keywords: Vec<&str> = definition.split(' ').collect();
 
-        let namespace = keywords.last().unwrap();
-        let namespace = namespace.trim().trim_end_matches(";");
-
-        namespace.to_string()
+        FileDef::extract_path(definition)
     }
 
 
@@ -132,5 +128,15 @@ impl FileDef {
 
     fn open_file(path: &PathBuf) -> FileStream {
         FileStream::new(path)
+    }
+
+
+    fn extract_path(declaration: String) -> String {
+        let keywords: Vec<&str> = definition.split(' ').collect();
+
+        let path = keywords.last().unwrap();
+        let path = path.trim().trim_end_matches(';');
+
+        path.to_string()
     }
 }
