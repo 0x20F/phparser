@@ -28,8 +28,6 @@ impl FileStream {
 
 
     pub fn rewind(&mut self) {
-        // Seek back to the start so other things can use this same buffer
-        // without reopening the file every time
         self.buffer.seek(SeekFrom::Start(0)).unwrap();
         self.position = 0;
     }
