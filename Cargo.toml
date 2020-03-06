@@ -12,7 +12,7 @@ lazy_static = "1.4.0"
 regex = "1"
 
 [dev-dependencies]
-paris = { git = "https://github.com/SirTheViking/logger" }
+paris = { git = "https://github.com/0x20F/logger" }
 
 
 [profile.release]
