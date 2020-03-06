@@ -13,3 +13,8 @@ regex = "1"
 
 [dev-dependencies]
 paris = { git = "https://github.com/SirTheViking/logger" }
+
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
