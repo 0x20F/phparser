@@ -25,7 +25,7 @@ fn namespace_tokens() {
 
 
 #[test]
-fn use_tokens() {
+fn import_tokens() {
     let mut stream = setup_stream("./tests/data/lexer_tests/use_test/use.php");
 
     let tokens = Lexer::tokenize(&mut stream);
@@ -34,7 +34,7 @@ fn use_tokens() {
 
     for token in tokens {
         match token {
-            Token::Use(_) => count = count + 1,
+            Token::Import(_, _) => count = count + 1,
             _ => continue
         };
     }

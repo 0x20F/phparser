@@ -1,6 +1,6 @@
 pub enum Token {
     Namespace(u64, String),
-    Use(u64, String), // Will probably need support for PHP7 soon
+    Import(u64, String), // Will probably need support for PHP7 soon
 
     ClassStart(u64),
     ClassName(u64, String),
