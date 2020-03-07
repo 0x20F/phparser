@@ -14,7 +14,7 @@ impl Lexer {
     pub fn tokenize(stream: &mut FileStream) -> Vec<Token> {
         lazy_static! {
             static ref NAMESPACE: Regex =
-                Regex::new("(?:namespace )(.*)(?:;)")
+                Regex::new("namespace ([a-zA-Z\\/]+);")
                 .unwrap();
 
             static ref FUNCTION: Regex =
@@ -135,5 +135,10 @@ impl Lexer {
 
 
         tokens
+    }
+
+
+    fn tokenize_namespace(line: &str) -> Token {
+
     }
 }
