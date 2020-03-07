@@ -55,7 +55,9 @@ impl Lexer {
 
             // Parse namespace if it hasn't been parsed already
             if !n && NAMESPACE.is_match(&line) {
-                tokens.push(Token::Namespace(position));
+                let namespace = NAMESPACE.captures(&line).unwrap();
+                tokens.push(Token::Namespace(position, namespace[1].to_string()));
+
                 n = true;
             }
 
@@ -135,10 +137,5 @@ impl Lexer {
 
 
         tokens
-    }
-
-
-    fn tokenize_namespace(line: &str) -> Token {
-
     }
 }
