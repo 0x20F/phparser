@@ -77,8 +77,8 @@ impl FileDef {
 
         for token in tokens {
             match token {
-                Token::Namespace(pos, n) => namespace = Some(n),
-                Token::Import(pos, i) => dependencies.push(i),
+                Token::Namespace(_, n) => namespace = Some(n),
+                Token::Import(_, i) => dependencies.push(i),
 
                 Token::ClassStart(pos) => println!("Class starts on {}", pos),
                 Token::ClassEnd(pos) => println!("Class ends on {}", pos),
@@ -104,15 +104,5 @@ impl FileDef {
             .collect();
 
         pieces.last().unwrap().to_string()
-    }
-
-
-    fn extract_path(declaration: String) -> String {
-        let keywords: Vec<&str> = declaration.split(' ').collect();
-
-        let path = keywords.last().unwrap();
-        let path = path.trim().trim_end_matches(';');
-
-        path.to_string()
     }
 }
