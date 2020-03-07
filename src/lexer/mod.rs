@@ -7,21 +7,30 @@ use regex::Regex;
 pub use token::Token;
 
 
+lazy_static! {
+    static ref NAMESPACE: Regex =
+        Regex::new("namespace ([a-zA-Z\\/]+);")
+        .unwrap();
+
+
+    static ref IMPORT: Regex =
+        Regex::new("use ([a-zA-Z\\/]+);")
+        .unwrap();
+
+
+    static ref FUNCTION: Regex =
+        Regex::new("(?:public|private|protected|^)( *)?(?:static )?function (?:[A-Za-z0-9]+)\\(")
+        .unwrap();
+}
+
+
+
+
 pub struct Lexer {}
 
 
 impl Lexer {
     pub fn tokenize(stream: &mut FileStream) -> Vec<Token> {
-        lazy_static! {
-            static ref NAMESPACE: Regex =
-                Regex::new("namespace ([a-zA-Z\\/]+);")
-                .unwrap();
-
-            static ref FUNCTION: Regex =
-                Regex::new("(?:public|private|protected|^)( *)?(?:static )?function (?:[A-Za-z0-9]+)\\(")
-                .unwrap();
-        }
-
         let mut tokens: Vec<Token> = vec![];
         let mut stack: Vec<bool> = vec![];
 
@@ -63,8 +72,9 @@ impl Lexer {
 
 
             // Parse dependency if they haven't been parsed already
-            if !f && !c && !u && line.starts_with("use") {
-                tokens.push(Token::Use(position));
+            if !f && !c && !u && IMPORT.is_match(&line) {
+                let import = IMPORT.captures(&line).unwrap();
+                tokens.push(Token::Import(position, import[1].to_string()));
             }
 
 

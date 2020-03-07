@@ -78,10 +78,7 @@ impl FileDef {
         for token in tokens {
             match token {
                 Token::Namespace(pos, n) => namespace = Some(n),
-
-                Token::Use(pos) => {
-                    dependencies.push(FileDef::parse_dependency(pos, &mut stream));
-                },
+                Token::Import(pos, i) => dependencies.push(i),
 
                 Token::ClassStart(pos) => println!("Class starts on {}", pos),
                 Token::ClassEnd(pos) => println!("Class ends on {}", pos),
@@ -107,15 +104,6 @@ impl FileDef {
             .collect();
 
         pieces.last().unwrap().to_string()
-    }
-
-
-    fn parse_dependency(line: u64, stream: &mut FileStream) -> String {
-        stream.jump_to(line);
-
-        let declaration = stream.next_line();
-
-        FileDef::extract_path(declaration)
     }
 
 
