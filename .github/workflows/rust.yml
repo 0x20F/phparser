@@ -1,30 +1,43 @@
 name: Rust Parser Tests
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: "ubuntu-latest", toolchain: "stable" }
+          - { os: "ubuntu-latest", toolchain: "beta" }
+          - { os: "ubuntu-latest", toolchain: "nightly" }
 
     steps:
       - uses: actions/checkout@v2
       
-      - name: Install latest stable rust build
+      
+      - name: Install ${{ matrix.config.toolchain }} toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          profile: minimal
+          toolchain: ${{ matrix.config.toolchain }}
           override: true
+          components: clippy
           
-      - name: Run cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
       
-      - name: Build
-        run: cargo build --verbose
+      - name: Run cargo tests
+        uses: actions-rs/cargo@v1
+        continue-on-error: ${{ matrix.config.toolchain == "nightly" }}
+        with:
+          command: test
     
-      - name: Run tests
-        run: cargo test --verbose
+    
+      - name: Run cargo clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
 
       
