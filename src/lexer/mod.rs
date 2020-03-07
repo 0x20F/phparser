@@ -1,25 +1,10 @@
+mod token;
+
 use super::definitions::{FileStream};
 use std::io::{Read, BufRead};
 use regex::Regex;
 
-
-
-
-
-pub enum Token {
-    Namespace(u64),
-    Use(u64), // Will probably need support for PHP7 soon
-
-    ClassStart(u64),
-    ClassEnd(u64),
-
-    MethodStart(u64),
-    MethodEnd(u64),
-
-    Function(u64, u64)
-}
-
-
+pub use token::Token;
 
 
 pub struct Lexer {}
@@ -117,7 +102,8 @@ impl Lexer {
 
                     if f {
                         fe = position;
-                        tokens.push(Token::Function(fs, fe));
+                        tokens.push(Token::FunctionStart(fs));
+                        tokens.push(Token::FunctionEnd(fe));
                         f = false;
                     }
                 }
@@ -131,7 +117,11 @@ impl Lexer {
                             tokens.push(Token::MethodEnd(fe));
                         } else {
                             // This should never happen?
-                            tokens.push(Token::Function(fs, fe));
+                            // Mainly because you can't be outside of a class
+                            // but still inside a code block where you're allowed
+                            // to defined functions.
+                            tokens.push(Token::FunctionStart(fs));
+                            tokens.push(Token::FunctionEnd(fe));
                         }
 
                         f = false;
