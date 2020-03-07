@@ -1,13 +1,19 @@
 pub enum Token {
-    Namespace(u64),
-    Use(u64), // Will probably need support for PHP7 soon
+    Namespace(u64, String),
+    Use(u64, String), // Will probably need support for PHP7 soon
 
     ClassStart(u64),
+    ClassName(u64, String),
     ClassEnd(u64),
 
     MethodStart(u64),
+    MethodName(u64, String),
+    MethodPrivacy(u64, String),
+    MethodParameters(u64, String),
     MethodEnd(u64),
 
     FunctionStart(u64),
+    FunctionName(u64, String),
+    FunctionParameters(u64, String),
     FunctionEnd(u64)
 }
