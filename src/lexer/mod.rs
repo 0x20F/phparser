@@ -9,12 +9,12 @@ pub use token::Token;
 
 lazy_static! {
     static ref NAMESPACE: Regex =
-        Regex::new("namespace ([a-zA-Z\\/]+);")
+        Regex::new("namespace (.+);")
         .unwrap();
 
 
     static ref IMPORT: Regex =
-        Regex::new("use ([a-zA-Z\\/]+);")
+        Regex::new("use (.+);")
         .unwrap();
 
 
