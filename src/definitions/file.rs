@@ -77,9 +77,7 @@ impl FileDef {
 
         for token in tokens {
             match token {
-                Token::Namespace(pos) => {
-                    namespace = Some(FileDef::parse_namespace(pos, &mut stream));
-                },
+                Token::Namespace(pos, n) => namespace = Some(n),
 
                 Token::Use(pos) => {
                     dependencies.push(FileDef::parse_dependency(pos, &mut stream));
@@ -109,15 +107,6 @@ impl FileDef {
             .collect();
 
         pieces.last().unwrap().to_string()
-    }
-
-
-    fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
-        stream.jump_to(line);
-
-        let declaration = stream.next_line();
-
-        FileDef::extract_path(declaration)
     }
 
 
