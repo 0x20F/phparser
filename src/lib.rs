@@ -10,6 +10,7 @@ use definitions::FileDef;
 use std::path::{Path, PathBuf};
 
 
+#[derive(Default)]
 pub struct Parser {}
 
 
