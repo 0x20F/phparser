@@ -103,6 +103,6 @@ impl FileDef {
             .split(&['/', '\\'][..])
             .collect();
 
-        pieces.last().unwrap().to_string()
+        (*pieces.last().unwrap()).to_string()
     }
 }

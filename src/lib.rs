@@ -51,9 +51,7 @@ impl Parser {
 
     pub fn parse_file(&self, file_path: PathBuf) -> FileDef {
         // New file struct -> pass path
-        let file = FileDef::new(file_path);
-
-        file
+        FileDef::new(file_path)
     }
 }
 

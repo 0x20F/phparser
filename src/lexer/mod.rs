@@ -104,7 +104,7 @@ impl Lexer {
                     n = true;
                 }
 
-                if stack.len() == 0 {
+                if stack.is_empty() {
                     if c {
                         ce = position;
                         tokens.push(Token::ClassStart(cs));
@@ -120,24 +120,22 @@ impl Lexer {
                     }
                 }
 
-                if stack.len() == 1 {
-                    if f {
-                        fe = position;
+                if stack.len() == 1 && f {
+                    fe = position;
 
-                        if c {
-                            tokens.push(Token::MethodStart(fs));
-                            tokens.push(Token::MethodEnd(fe));
-                        } else {
-                            // This should never happen?
-                            // Mainly because you can't be outside of a class
-                            // but still inside a code block where you're allowed
-                            // to defined functions.
-                            tokens.push(Token::FunctionStart(fs));
-                            tokens.push(Token::FunctionEnd(fe));
-                        }
-
-                        f = false;
+                    if c {
+                        tokens.push(Token::MethodStart(fs));
+                        tokens.push(Token::MethodEnd(fe));
+                    } else {
+                        // This should never happen?
+                        // Mainly because you can't be outside of a class
+                        // but still inside a code block where you're allowed
+                        // to defined functions.
+                        tokens.push(Token::FunctionStart(fs));
+                        tokens.push(Token::FunctionEnd(fe));
                     }
+
+                    f = false;
                 }
             }
 
