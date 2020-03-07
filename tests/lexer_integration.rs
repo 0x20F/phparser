@@ -68,9 +68,7 @@ fn function_tokens() {
 
     for token in tokens {
         match token {
-            Token::MethodStart(_) => counter = counter + 1,
-            Token::MethodEnd(_) => counter = counter + 1,
-
+            Token::MethodStart(_) | Token::MethodEnd(_) => counter = counter + 1,
             Token::Function(_, _) => counter = counter + 1,
             _ => continue
         };
