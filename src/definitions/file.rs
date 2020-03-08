@@ -84,8 +84,7 @@ impl FileDef {
                     Token::Namespace(_, n) => namespace = Some(n),
                     Token::Import(_, i) => dependencies.push(i),
 
-                    Token::ClassStart(pos) => println!("Class starts on {}", pos),
-                    Token::ClassEnd(pos) => println!("Class ends on {}", pos),
+                    Token::ClassStart(pos) => Self::build_class(&mut tokens),
                     _ => break
                 }
 
@@ -115,5 +114,29 @@ impl FileDef {
             .collect();
 
         (*pieces.last().unwrap()).to_string()
+    }
+
+
+    fn build_class<I>(tokens: &mut I)
+        where I: Iterator<Item = Token>
+    {
+        let first = tokens.next();
+
+        if first.is_some() {
+            let mut token = first.unwrap();
+
+            loop {
+                match token {
+                    Token::ClassEnd(_) => println!("Class end directly"),
+                    _ => println!("There are other things")
+                }
+
+                if let Some(t) = tokens.next() {
+                    token = t;
+                } else {
+                    break;
+                }
+            }
+        }
     }
 }
