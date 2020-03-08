@@ -70,7 +70,7 @@ impl FileDef {
         // of file object references?
         let mut dependencies = vec![];
 
-        let name = FileDef::parse_name(&path);
+        let name = Self::parse_name(&path);
         let mut stream = FileStream::new(&path);
 
         let mut tokens = Lexer::tokenize(&mut stream).into_iter();
