@@ -2,7 +2,7 @@ mod token;
 
 use super::definitions::{FileStream};
 use std::io::{Read, BufRead};
-use regex::{Regex, Captures};
+use regex::Regex;
 
 pub use token::Token;
 
@@ -84,9 +84,7 @@ impl Lexer {
 
             // Check if this is a class declaration only if not already in a function or class
             if !f && !c && CLASS.is_match(&line) {
-                let definition = CLASS.captures(&line).unwrap();
-
-                let class = Self::tokenize_class_definition(position, definition);
+                let class = Self::tokenize_class_definition(position, &line);
                 tokens.extend(class);
 
                 c = true;
@@ -155,12 +153,12 @@ impl Lexer {
     }
 
 
-    fn tokenize_class_definition(pos: u64, def: Captures) -> Vec<Token> {
-        let mut tokens = vec![];
+    fn tokenize_class_definition(pos: u64, def: &String) -> Vec<Token> {
+        let def = CLASS.captures(def).unwrap();
 
-        tokens.push(Token::ClassStart(pos));
-        tokens.push(Token::ClassName(pos, def["name"].to_owned()));
-
-        tokens
+        vec![
+            Token::ClassStart(pos),
+            Token::ClassName(pos, def["name"].to_owned())
+        ]
     }
 }
