@@ -127,6 +127,7 @@ impl FileDef {
             loop {
                 match token {
                     Token::ClassEnd(_) => println!("Class end directly"),
+                    Token::ClassName(_, n) => println!("Theres a class name: {}", n),
                     _ => println!("There are other things")
                 }
 
