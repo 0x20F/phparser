@@ -73,16 +73,27 @@ impl FileDef {
         let name = FileDef::parse_name(&path);
         let mut stream = FileStream::new(&path);
 
-        let tokens = Lexer::tokenize(&mut stream);
+        let mut tokens = Lexer::tokenize(&mut stream).into_iter();
+        let first = tokens.next();
 
-        for token in tokens {
-            match token {
-                Token::Namespace(_, n) => namespace = Some(n),
-                Token::Import(_, i) => dependencies.push(i),
+        if first.is_some() {
+            let mut token = first.unwrap();
 
-                Token::ClassStart(pos) => println!("Class starts on {}", pos),
-                Token::ClassEnd(pos) => println!("Class ends on {}", pos),
-                _ => break
+            loop {
+                match token {
+                    Token::Namespace(_, n) => namespace = Some(n),
+                    Token::Import(_, i) => dependencies.push(i),
+
+                    Token::ClassStart(pos) => println!("Class starts on {}", pos),
+                    Token::ClassEnd(pos) => println!("Class ends on {}", pos),
+                    _ => break
+                }
+
+                if let Some(t) = tokens.next() {
+                    token = t;
+                } else {
+                    break;
+                }
             }
         }
 
