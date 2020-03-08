@@ -74,17 +74,16 @@ impl FileDef {
         let mut stream = FileStream::new(&path);
 
         let mut tokens = Lexer::tokenize(&mut stream).into_iter();
-        let first = tokens.next();
 
-        if first.is_some() {
-            let mut token = first.unwrap();
+        if let Some(first) = tokens.next() {
+            let mut token = first;
 
             loop {
                 match token {
                     Token::Namespace(_, n) => namespace = Some(n),
                     Token::Import(_, i) => dependencies.push(i),
 
-                    Token::ClassStart(pos) => Self::build_class(&mut tokens),
+                    Token::ClassStart(_) => Self::build_class(&mut tokens),
                     _ => break
                 }
 
@@ -120,10 +119,8 @@ impl FileDef {
     fn build_class<I>(tokens: &mut I)
         where I: Iterator<Item = Token>
     {
-        let first = tokens.next();
-
-        if first.is_some() {
-            let mut token = first.unwrap();
+        if let Some(first) = tokens.next() {
+            let mut token = first;
 
             loop {
                 match token {
