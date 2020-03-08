@@ -9,12 +9,12 @@ pub use token::Token;
 
 lazy_static! {
     static ref NAMESPACE: Regex =
-        Regex::new("namespace (.+);")
+        Regex::new("namespace (?P<path>.+);")
         .unwrap();
 
 
     static ref IMPORT: Regex =
-        Regex::new("use (.+);")
+        Regex::new("use (?P<path>.+);")
         .unwrap();
 
 
@@ -65,7 +65,7 @@ impl Lexer {
             // Parse namespace if it hasn't been parsed already
             if !n && NAMESPACE.is_match(&line) {
                 let namespace = NAMESPACE.captures(&line).unwrap();
-                tokens.push(Token::Namespace(position, namespace[1].to_string()));
+                tokens.push(Token::Namespace(position, namespace["path"].to_string()));
 
                 n = true;
             }
@@ -74,7 +74,7 @@ impl Lexer {
             // Parse dependency if they haven't been parsed already
             if !f && !c && !u && IMPORT.is_match(&line) {
                 let import = IMPORT.captures(&line).unwrap();
-                tokens.push(Token::Import(position, import[1].to_string()));
+                tokens.push(Token::Import(position, import["path"].to_string()));
             }
 
 
