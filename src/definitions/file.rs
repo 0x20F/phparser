@@ -70,24 +70,29 @@ impl FileDef {
         // of file object references?
         let mut dependencies = vec![];
 
-        let name = FileDef::parse_name(&path);
+        let name = Self::parse_name(&path);
         let mut stream = FileStream::new(&path);
 
-        let tokens = Lexer::tokenize(&mut stream);
+        // Turn it into an iterator to allow more control
+        let mut tokens = Lexer::tokenize(&mut stream).into_iter();
 
-        for token in tokens {
-            match token {
-                Token::Namespace(pos) => {
-                    namespace = Some(FileDef::parse_namespace(pos, &mut stream));
-                },
+        if let Some(first) = tokens.next() {
+            let mut token = first;
 
-                Token::Use(pos) => {
-                    dependencies.push(FileDef::parse_dependency(pos, &mut stream));
-                },
+            loop {
+                match token {
+                    Token::Namespace(_, n) => namespace = Some(n),
+                    Token::Import(_, i) => dependencies.push(i),
 
-                Token::ClassStart(pos) => println!("Class starts on {}", pos),
-                Token::ClassEnd(pos) => println!("Class ends on {}", pos),
-                _ => break
+                    Token::ClassStart(_) => Self::build_class(&mut tokens),
+                    _ => break
+                }
+
+                if let Some(t) = tokens.next() {
+                    token = t;
+                } else {
+                    break;
+                }
             }
         }
 
@@ -108,34 +113,30 @@ impl FileDef {
             .split(&['/', '\\'][..])
             .collect();
 
-        pieces.last().unwrap().to_string()
+        (*pieces.last().unwrap()).to_string()
     }
 
 
-    fn parse_namespace(line: u64, stream: &mut FileStream) -> String {
-        stream.jump_to(line);
+    fn build_class<I>(tokens: &mut I)
+        where I: Iterator<Item = Token>
+    {
+        if let Some(first) = tokens.next() {
+            let mut token = first;
 
-        let declaration = stream.next_line();
+            // Loop through tokens until ClassEnd is reached
+            loop {
+                match token {
+                    Token::ClassEnd(_) => println!("Class end directly"),
+                    Token::ClassName(_, n) => println!("Theres a class name: {}", n),
+                    _ => println!("There are other things")
+                }
 
-        FileDef::extract_path(declaration)
-    }
-
-
-    fn parse_dependency(line: u64, stream: &mut FileStream) -> String {
-        stream.jump_to(line);
-
-        let declaration = stream.next_line();
-
-        FileDef::extract_path(declaration)
-    }
-
-
-    fn extract_path(declaration: String) -> String {
-        let keywords: Vec<&str> = declaration.split(' ').collect();
-
-        let path = keywords.last().unwrap();
-        let path = path.trim().trim_end_matches(';');
-
-        path.to_string()
+                if let Some(t) = tokens.next() {
+                    token = t;
+                } else {
+                    break;
+                }
+            }
+        }
     }
 }

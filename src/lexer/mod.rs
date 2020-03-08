@@ -7,21 +7,35 @@ use regex::Regex;
 pub use token::Token;
 
 
+lazy_static! {
+    static ref NAMESPACE: Regex =
+        Regex::new("namespace (?P<path>.+);")
+        .unwrap();
+
+
+    static ref IMPORT: Regex =
+        Regex::new("use (?P<path>.+);")
+        .unwrap();
+
+
+    static ref FUNCTION: Regex =
+        Regex::new("(?P<privacy>public|private|protected|^)(?: +)?(?:static )?function (?P<name>[a-zA-Z0-9]+)\\(")
+        .unwrap();
+
+
+    static ref CLASS: Regex =
+        Regex::new("^(abstract |final )?class (?P<name>[a-zA-Z]+)") // Doesn't handle extensions yet
+        .unwrap();
+}
+
+
+
+
 pub struct Lexer {}
 
 
 impl Lexer {
     pub fn tokenize(stream: &mut FileStream) -> Vec<Token> {
-        lazy_static! {
-            static ref NAMESPACE: Regex =
-                Regex::new("(?:namespace )(.*)(?:;)")
-                .unwrap();
-
-            static ref FUNCTION: Regex =
-                Regex::new("(?:public|private|protected|^)( *)?(?:static )?function (?:[A-Za-z0-9]+)\\(")
-                .unwrap();
-        }
-
         let mut tokens: Vec<Token> = vec![];
         let mut stack: Vec<bool> = vec![];
 
@@ -37,13 +51,12 @@ impl Lexer {
         */
         let (mut n, mut c, mut f, mut u) = (false, false, false, false);
         /*
-            cs => class start position
             fs => function/method start position
 
             ce => class end position
             fe => function/method end position
         */
-        let (mut cs, mut fs) = (0, 0);
+        let mut fs = 0;
         let (mut ce, mut fe);
 
         
@@ -55,20 +68,25 @@ impl Lexer {
 
             // Parse namespace if it hasn't been parsed already
             if !n && NAMESPACE.is_match(&line) {
-                tokens.push(Token::Namespace(position));
+                let namespace = NAMESPACE.captures(&line).unwrap();
+                tokens.push(Token::Namespace(position, namespace["path"].to_string()));
+
                 n = true;
             }
 
 
             // Parse dependency if they haven't been parsed already
-            if !f && !c && !u && line.starts_with("use") {
-                tokens.push(Token::Use(position));
+            if !f && !c && !u && IMPORT.is_match(&line) {
+                let import = IMPORT.captures(&line).unwrap();
+                tokens.push(Token::Import(position, import["path"].to_string()));
             }
 
 
             // Check if this is a class declaration only if not already in a function or class
-            if !f && !c && line.starts_with("class") {
-                cs = position;
+            if !f && !c && CLASS.is_match(&line) {
+                let class = Self::tokenize_class_definition(position, &line);
+                tokens.extend(class);
+
                 c = true;
             }
 
@@ -92,10 +110,9 @@ impl Lexer {
                     n = true;
                 }
 
-                if stack.len() == 0 {
+                if stack.is_empty() {
                     if c {
                         ce = position;
-                        tokens.push(Token::ClassStart(cs));
                         tokens.push(Token::ClassEnd(ce));
                         c = false;
                     }
@@ -108,24 +125,22 @@ impl Lexer {
                     }
                 }
 
-                if stack.len() == 1 {
-                    if f {
-                        fe = position;
+                if stack.len() == 1 && f {
+                    fe = position;
 
-                        if c {
-                            tokens.push(Token::MethodStart(fs));
-                            tokens.push(Token::MethodEnd(fe));
-                        } else {
-                            // This should never happen?
-                            // Mainly because you can't be outside of a class
-                            // but still inside a code block where you're allowed
-                            // to defined functions.
-                            tokens.push(Token::FunctionStart(fs));
-                            tokens.push(Token::FunctionEnd(fe));
-                        }
-
-                        f = false;
+                    if c {
+                        tokens.push(Token::MethodStart(fs));
+                        tokens.push(Token::MethodEnd(fe));
+                    } else {
+                        // This should never happen?
+                        // Mainly because you can't be outside of a class
+                        // but still inside a code block where you're allowed
+                        // to defined functions.
+                        tokens.push(Token::FunctionStart(fs));
+                        tokens.push(Token::FunctionEnd(fe));
                     }
+
+                    f = false;
                 }
             }
 
@@ -135,5 +150,15 @@ impl Lexer {
 
 
         tokens
+    }
+
+
+    fn tokenize_class_definition(pos: u64, def: &str) -> Vec<Token> {
+        let def = CLASS.captures(def).unwrap();
+
+        vec![
+            Token::ClassStart(pos),
+            Token::ClassName(pos, def["name"].to_owned())
+        ]
     }
 }
