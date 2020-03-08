@@ -51,13 +51,12 @@ impl Lexer {
         */
         let (mut n, mut c, mut f, mut u) = (false, false, false, false);
         /*
-            cs => class start position
             fs => function/method start position
 
             ce => class end position
             fe => function/method end position
         */
-        let (mut cs, mut fs) = (0, 0);
+        let mut fs = 0;
         let (mut ce, mut fe);
 
         
