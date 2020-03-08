@@ -73,6 +73,7 @@ impl FileDef {
         let name = Self::parse_name(&path);
         let mut stream = FileStream::new(&path);
 
+        // Turn it into an iterator to allow more control
         let mut tokens = Lexer::tokenize(&mut stream).into_iter();
 
         if let Some(first) = tokens.next() {
@@ -122,6 +123,7 @@ impl FileDef {
         if let Some(first) = tokens.next() {
             let mut token = first;
 
+            // Loop through tokens until ClassEnd is reached
             loop {
                 match token {
                     Token::ClassEnd(_) => println!("Class end directly"),
