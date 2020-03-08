@@ -51,7 +51,12 @@ fn class_tokens() {
 
     let tokens = Lexer::tokenize(&mut stream);
 
-    assert_eq!(6 * 2, tokens.len());
+    /*
+        ClassStart
+        ClassName
+        ClassEnd
+    */
+    assert_eq!(tokens.len(), 18);
 }
 
 
