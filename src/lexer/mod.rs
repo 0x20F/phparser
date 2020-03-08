@@ -21,6 +21,11 @@ lazy_static! {
     static ref FUNCTION: Regex =
         Regex::new("(?:public|private|protected|^)( *)?(?:static )?function (?:[A-Za-z0-9]+)\\(")
         .unwrap();
+
+
+    static ref CLASS: Regex =
+        Regex::new("^(abstract )?class (?P<name>[a-zA-Z]+)") // Doesn't handle extensions yet
+        .unwrap();
 }
 
 
@@ -145,5 +150,10 @@ impl Lexer {
 
 
         tokens
+    }
+
+
+    fn tokenize_class_definition(def: &String) -> Vec<Token> {
+
     }
 }
