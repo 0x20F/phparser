@@ -153,7 +153,7 @@ impl Lexer {
     }
 
 
-    fn tokenize_class_definition(pos: u64, def: &String) -> Vec<Token> {
+    fn tokenize_class_definition(pos: u64, def: &str) -> Vec<Token> {
         let def = CLASS.captures(def).unwrap();
 
         vec![
