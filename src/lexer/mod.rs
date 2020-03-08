@@ -24,7 +24,7 @@ lazy_static! {
 
 
     static ref CLASS: Regex =
-        Regex::new("^(abstract )?class (?P<name>[a-zA-Z]+)") // Doesn't handle extensions yet
+        Regex::new("^(abstract |final )?class (?P<name>[a-zA-Z]+)") // Doesn't handle extensions yet
         .unwrap();
 }
 
