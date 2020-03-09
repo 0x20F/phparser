@@ -167,9 +167,17 @@ impl Lexer {
     fn tokenize_function_definition(pos: u64, def: &str) -> Vec<Token> {
         let def = FUNCTION.captures(def).unwrap();
 
-        vec![
+        let mut tokens = vec![
             Token::FunctionStart(pos),
             Token::FunctionName(pos, def["name"].to_owned())
-        ]
+        ];
+
+        if let Some(_) = def.name("privacy") {
+            tokens.push(Token::FunctionPrivacy(pos, def["privacy"].to_owned()));
+        } else {
+            tokens.push(Token::FunctionPrivacy(pos, String::from("")));
+        };
+
+        tokens
     }
 }
