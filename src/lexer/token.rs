@@ -8,6 +8,6 @@ pub enum Token {
 
     FunctionStart(u64),
     FunctionName(u64, String),
-    FunctionPrivacy(u64, String),
+    FunctionPrivacy(u64, Option<String>),
     FunctionEnd(u64)
 }
