@@ -119,25 +119,13 @@ impl Lexer {
                     if f {
                         fe = position;
                         tokens.push(Token::FunctionEnd(fe));
-                        println!("Finished a normal method");
                         f = false;
                     }
                 }
 
                 if stack.len() == 1 && f {
                     fe = position;
-
-                    if c {
-                        println!("Finished a class method");
-                        tokens.push(Token::FunctionEnd(fe));
-                    } else {
-                        // This should never happen?
-                        // Mainly because you can't be outside of a class
-                        // but still inside a code block where you're allowed
-                        // to defined functions.
-                        tokens.push(Token::FunctionEnd(fe));
-                    }
-
+                    tokens.push(Token::FunctionEnd(fe));
                     f = false;
                 }
             }
