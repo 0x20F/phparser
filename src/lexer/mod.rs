@@ -51,12 +51,9 @@ impl Lexer {
         */
         let (mut n, mut c, mut f, mut u) = (false, false, false, false);
         /*
-            fs => function/method start position
-
             ce => class end position
             fe => function/method end position
         */
-        let mut fs = 0;
         let (mut ce, mut fe);
 
         
@@ -93,7 +90,6 @@ impl Lexer {
 
             // Check if this is a function declaration only if not already in a function
             if !f && FUNCTION.is_match(&line) {
-                fs = position;
                 let function = Self::tokenize_function_definition(position, &line);
                 tokens.extend(function);
 
@@ -123,6 +119,7 @@ impl Lexer {
                     if f {
                         fe = position;
                         tokens.push(Token::FunctionEnd(fe));
+                        println!("Finished a normal method");
                         f = false;
                     }
                 }
@@ -131,8 +128,8 @@ impl Lexer {
                     fe = position;
 
                     if c {
-                        tokens.push(Token::MethodStart(fs));
-                        tokens.push(Token::MethodEnd(fe));
+                        println!("Finished a class method");
+                        tokens.push(Token::FunctionEnd(fe));
                     } else {
                         // This should never happen?
                         // Mainly because you can't be outside of a class
@@ -172,11 +169,10 @@ impl Lexer {
             Token::FunctionName(pos, def["name"].to_owned())
         ];
 
-        if let Some(_) = def.name("privacy") {
-            tokens.push(Token::FunctionPrivacy(pos, def["privacy"].to_owned()));
-        } else {
-            tokens.push(Token::FunctionPrivacy(pos, String::from("")));
-        };
+        tokens.push(match def.name("privacy") {
+            Some(_) => Token::FunctionPrivacy(pos, def["privacy"].to_owned()),
+            None    => Token::FunctionPrivacy(pos, String::from(""))
+        });
 
         tokens
     }
