@@ -120,22 +120,20 @@ impl FileDef {
     fn build_class<I>(tokens: &mut I)
         where I: Iterator<Item = Token>
     {
-        if let Some(first) = tokens.next() {
-            let mut token = first;
+        let mut token = tokens.next().unwrap();
 
-            // Loop through tokens until ClassEnd is reached
-            loop {
-                match token {
-                    Token::ClassEnd(_) => println!("Class end directly"),
-                    Token::ClassName(_, n) => println!("Theres a class name: {}", n),
-                    _ => println!("There are other things")
-                }
+        // Loop through tokens until ClassEnd is reached
+        loop {
+            match token {
+                Token::ClassEnd(_) => println!("Class end directly"),
+                Token::ClassName(_, n) => println!("Theres a class name: {}", n),
+                _ => println!("There are other things")
+            }
 
-                if let Some(t) = tokens.next() {
-                    token = t;
-                } else {
-                    break;
-                }
+            if let Some(t) = tokens.next() {
+                token = t;
+            } else {
+                break;
             }
         }
     }

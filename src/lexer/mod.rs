@@ -51,12 +51,9 @@ impl Lexer {
         */
         let (mut n, mut c, mut f, mut u) = (false, false, false, false);
         /*
-            fs => function/method start position
-
             ce => class end position
             fe => function/method end position
         */
-        let mut fs = 0;
         let (mut ce, mut fe);
 
         
@@ -93,7 +90,9 @@ impl Lexer {
 
             // Check if this is a function declaration only if not already in a function
             if !f && FUNCTION.is_match(&line) {
-                fs = position;
+                let function = Self::tokenize_function_definition(position, &line);
+                tokens.extend(function);
+
                 f = true;
             }
 
@@ -119,7 +118,6 @@ impl Lexer {
 
                     if f {
                         fe = position;
-                        tokens.push(Token::FunctionStart(fs));
                         tokens.push(Token::FunctionEnd(fe));
                         f = false;
                     }
@@ -127,19 +125,7 @@ impl Lexer {
 
                 if stack.len() == 1 && f {
                     fe = position;
-
-                    if c {
-                        tokens.push(Token::MethodStart(fs));
-                        tokens.push(Token::MethodEnd(fe));
-                    } else {
-                        // This should never happen?
-                        // Mainly because you can't be outside of a class
-                        // but still inside a code block where you're allowed
-                        // to defined functions.
-                        tokens.push(Token::FunctionStart(fs));
-                        tokens.push(Token::FunctionEnd(fe));
-                    }
-
+                    tokens.push(Token::FunctionEnd(fe));
                     f = false;
                 }
             }
@@ -160,5 +146,22 @@ impl Lexer {
             Token::ClassStart(pos),
             Token::ClassName(pos, def["name"].to_owned())
         ]
+    }
+
+
+    fn tokenize_function_definition(pos: u64, def: &str) -> Vec<Token> {
+        let def = FUNCTION.captures(def).unwrap();
+
+        let mut tokens = vec![
+            Token::FunctionStart(pos),
+            Token::FunctionName(pos, def["name"].to_owned())
+        ];
+
+        tokens.push(match def.name("privacy") {
+            Some(_) => Token::FunctionPrivacy(pos, Some(def["privacy"].to_owned())),
+            None    => Token::FunctionPrivacy(pos, None)
+        });
+
+        tokens
     }
 }
