@@ -94,6 +94,9 @@ impl Lexer {
             // Check if this is a function declaration only if not already in a function
             if !f && FUNCTION.is_match(&line) {
                 fs = position;
+                let function = Self::tokenize_function_definition(position, &line);
+                tokens.extend(function);
+
                 f = true;
             }
 
@@ -119,7 +122,6 @@ impl Lexer {
 
                     if f {
                         fe = position;
-                        tokens.push(Token::FunctionStart(fs));
                         tokens.push(Token::FunctionEnd(fe));
                         f = false;
                     }
@@ -136,7 +138,6 @@ impl Lexer {
                         // Mainly because you can't be outside of a class
                         // but still inside a code block where you're allowed
                         // to defined functions.
-                        tokens.push(Token::FunctionStart(fs));
                         tokens.push(Token::FunctionEnd(fe));
                     }
 
@@ -159,6 +160,16 @@ impl Lexer {
         vec![
             Token::ClassStart(pos),
             Token::ClassName(pos, def["name"].to_owned())
+        ]
+    }
+
+
+    fn tokenize_function_definition(pos: u64, def: &str) -> Vec<Token> {
+        let def = FUNCTION.captures(def).unwrap();
+
+        vec![
+            Token::FunctionStart(pos),
+            Token::FunctionName(pos, def["name"].to_owned())
         ]
     }
 }
