@@ -150,8 +150,8 @@ impl Lexer {
         ];
 
         tokens.push(match def.name("privacy") {
-            Some(_) => Token::FunctionPrivacy(pos, def["privacy"].to_owned()),
-            None    => Token::FunctionPrivacy(pos, String::from(""))
+            Some(_) => Token::FunctionPrivacy(pos, Some(def["privacy"].to_owned())),
+            None    => Token::FunctionPrivacy(pos, None)
         });
 
         tokens
