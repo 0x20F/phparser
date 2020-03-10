@@ -50,11 +50,6 @@ impl Lexer {
             u => use/import statements have already been parsed
         */
         let (mut n, mut c, mut f, mut u) = (false, false, false, false);
-        /*
-            ce => class end position
-            fe => function/method end position
-        */
-        let (mut ce, mut fe);
 
         
         for line in stream.buffer.by_ref().lines() {
@@ -111,21 +106,18 @@ impl Lexer {
 
                 if stack.is_empty() {
                     if c {
-                        ce = pos;
-                        tokens.push(Token::ClassEnd(ce));
+                        tokens.push(Token::ClassEnd(pos));
                         c = false;
                     }
 
                     if f {
-                        fe = pos;
-                        tokens.push(Token::FunctionEnd(fe));
+                        tokens.push(Token::FunctionEnd(pos));
                         f = false;
                     }
                 }
 
                 if stack.len() == 1 && f {
-                    fe = pos;
-                    tokens.push(Token::FunctionEnd(fe));
+                    tokens.push(Token::FunctionEnd(pos));
                     f = false;
                 }
             }
