@@ -39,7 +39,7 @@ impl Lexer {
         let mut tokens: Vec<Token> = vec![];
         let mut stack: Vec<bool> = vec![];
 
-        let mut position = 0;
+        let mut pos = 0;
 
         /*
             Flags:
@@ -66,7 +66,7 @@ impl Lexer {
             // Parse namespace if it hasn't been parsed already
             if !n && NAMESPACE.is_match(&line) {
                 let namespace = NAMESPACE.captures(&line).unwrap();
-                tokens.push(Token::Namespace(position, namespace["path"].to_string()));
+                tokens.push(Token::Namespace(pos, namespace["path"].to_string()));
 
                 n = true;
             }
@@ -75,13 +75,13 @@ impl Lexer {
             // Parse dependency if they haven't been parsed already
             if !f && !c && !u && IMPORT.is_match(&line) {
                 let import = IMPORT.captures(&line).unwrap();
-                tokens.push(Token::Import(position, import["path"].to_string()));
+                tokens.push(Token::Import(pos, import["path"].to_string()));
             }
 
 
             // Check if this is a class declaration only if not already in a function or class
             if !f && !c && CLASS.is_match(&line) {
-                let class = Self::tokenize_class_definition(position, &line);
+                let class = Self::tokenize_class_definition(pos, &line);
                 tokens.extend(class);
 
                 c = true;
@@ -90,7 +90,7 @@ impl Lexer {
 
             // Check if this is a function declaration only if not already in a function
             if !f && FUNCTION.is_match(&line) {
-                let function = Self::tokenize_function_definition(position, &line);
+                let function = Self::tokenize_function_definition(pos, &line);
                 tokens.extend(function);
 
                 f = true;
@@ -111,27 +111,27 @@ impl Lexer {
 
                 if stack.is_empty() {
                     if c {
-                        ce = position;
+                        ce = pos;
                         tokens.push(Token::ClassEnd(ce));
                         c = false;
                     }
 
                     if f {
-                        fe = position;
+                        fe = pos;
                         tokens.push(Token::FunctionEnd(fe));
                         f = false;
                     }
                 }
 
                 if stack.len() == 1 && f {
-                    fe = position;
+                    fe = pos;
                     tokens.push(Token::FunctionEnd(fe));
                     f = false;
                 }
             }
 
             // +1 to account for the newline character that the buffer removes
-            position = (position + line.len() as u64) + 1;
+            pos = (pos + line.len() as u64) + 1;
         }
 
 
