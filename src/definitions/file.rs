@@ -125,8 +125,8 @@ impl FileDef {
         // Loop through tokens until ClassEnd is reached
         loop {
             match token {
-                Token::ClassEnd(_) => println!("Class end directly"),
                 Token::ClassName(_, n) => println!("Theres a class name: {}", n),
+                Token::ClassEnd(_) => println!("Class end directly"),
                 _ => println!("There are other things")
             }
 
