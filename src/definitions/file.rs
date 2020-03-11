@@ -130,7 +130,10 @@ impl FileDef {
 
                 Token::FunctionStart(_) => Self::build_function(&mut tokens),
 
-                Token::ClassEnd(_) => println!("Class end directly"),
+                Token::ClassEnd(_) => {
+                    println!("Class end now");
+                    break;
+                },
                 _ => ()
             }
 
@@ -154,7 +157,10 @@ impl FileDef {
             match token {
                 Token::FunctionName(_, n) => println!("Found function with name: {}", n),
                 Token::FunctionPrivacy(_, p) => println!("And privacy: {}", p.unwrap()),
-                Token::FunctionEnd(_) => println!("Function ends now"),
+                Token::FunctionEnd(_) => {
+                    println!("Function ends now");
+                    break;
+                },
                 _ => ()
             }
 
