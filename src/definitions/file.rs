@@ -131,7 +131,7 @@ impl FileDef {
                 Token::FunctionStart(_) => Self::build_function(&mut tokens),
 
                 Token::ClassEnd(_) => println!("Class end directly"),
-                _ => println!("There are other things")
+                _ => ()
             }
 
             if let Some(t) = tokens.next() {
@@ -155,7 +155,7 @@ impl FileDef {
                 Token::FunctionName(_, n) => println!("Found function with name: {}", n),
                 Token::FunctionPrivacy(_, p) => println!("And privacy: {}", p.unwrap()),
                 Token::FunctionEnd(_) => println!("Function ends now"),
-                _ => println!("There are other things")
+                _ => ()
             }
 
             if let Some(t) = tokens.next() {
