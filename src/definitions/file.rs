@@ -56,7 +56,8 @@ pub struct FileDef {
     pub path: PathBuf,
     pub name: String,
     pub namespace: Option<String>,
-    pub dependencies: Vec<String>
+    pub dependencies: Vec<String>,
+    pub classes: Option<Vec<ClassDef>>
 }
 
 
@@ -75,6 +76,8 @@ impl FileDef {
         // Turn it into an iterator to allow more control
         let mut tokens = Lexer::tokenize(&mut stream).into_iter();
 
+        let mut classes = vec![];
+
         if let Some(first) = tokens.next() {
             let mut token = first;
 
@@ -83,7 +86,7 @@ impl FileDef {
                     Token::Namespace(_, n) => namespace = Some(n),
                     Token::Import(_, i) => dependencies.push(i),
 
-                    Token::ClassStart(_) => ClassDef::new(&mut tokens),
+                    Token::ClassStart(_) => classes.push(ClassDef::new(&mut tokens)),
                     _ => break
                 }
 
@@ -100,7 +103,8 @@ impl FileDef {
             path,
             name,
             namespace,
-            dependencies
+            dependencies,
+            classes: if classes.is_empty() { None } else { Some(classes) }
         }
     }
 
