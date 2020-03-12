@@ -3,8 +3,7 @@ use std::io::prelude::*;
 use std::io::{BufReader, SeekFrom};
 use std::path::{PathBuf};
 use crate::lexer::{Lexer, Token};
-
-
+use crate::definitions::ClassDef;
 
 
 pub struct FileStream {
@@ -84,7 +83,7 @@ impl FileDef {
                     Token::Namespace(_, n) => namespace = Some(n),
                     Token::Import(_, i) => dependencies.push(i),
 
-                    Token::ClassStart(_) => Self::build_class(&mut tokens),
+                    Token::ClassStart(_) => ClassDef::new(&mut tokens),
                     _ => break
                 }
 
