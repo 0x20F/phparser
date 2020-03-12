@@ -15,7 +15,7 @@ impl FunctionDef {
         loop {
             match token {
                 Token::FunctionName(_, n) => println!("Found function with name: {}", n),
-                Token::FunctionPrivacy(_, p) => println!("And privacy: {}", p.unwrap()),
+                Token::FunctionPrivacy(_, p) => println!("And privacy: {:?}", p),
                 Token::FunctionEnd(_) => {
                     println!("Function ends now");
                     break;
