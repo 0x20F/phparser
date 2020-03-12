@@ -5,6 +5,7 @@ pub struct ClassDef {
     name: String,
 }
 
+
 impl ClassDef {
     pub fn new<I>(mut tokens: &mut I)
         where I: Iterator<Item = Token>
@@ -33,6 +34,7 @@ impl ClassDef {
             }
         }
     }
+
 
     fn build_function<I>(tokens: &mut I)
         where I: Iterator<Item = Token>
