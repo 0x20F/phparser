@@ -7,7 +7,7 @@ pub struct ClassDef {
 
 
 impl ClassDef {
-    pub fn new<I>(mut tokens: &mut I)
+    pub fn new<I>(mut tokens: &mut I) -> Self
         where I: Iterator<Item = Token>
     {
         let mut token = tokens.next().unwrap();
@@ -32,6 +32,10 @@ impl ClassDef {
             } else {
                 break;
             }
+        }
+
+        ClassDef {
+            name: String::from("")
         }
     }
 
