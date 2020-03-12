@@ -4,6 +4,7 @@ use crate::definitions::FunctionDef;
 
 pub struct ClassDef {
     name: String,
+    methods: Option<Vec<FunctionDef>>
 }
 
 
@@ -13,13 +14,15 @@ impl ClassDef {
     {
         let mut token = tokens.next().unwrap();
 
+        let mut methods = vec![];
+
         // Loop through tokens until ClassEnd is reached
         // This should all build a ClassDef object
         loop {
             match token {
                 Token::ClassName(_, n) => println!("Theres a class name: {}", n),
 
-                Token::FunctionStart(_) => FunctionDef::new(&mut tokens),
+                Token::FunctionStart(_) => methods.push(FunctionDef::new(&mut tokens)),
 
                 Token::ClassEnd(_) => {
                     println!("Class end now");
@@ -36,7 +39,8 @@ impl ClassDef {
         }
 
         ClassDef {
-            name: String::from("")
+            name: String::from(""),
+            methods: if methods.is_empty() { None } else { Some(methods) }
         }
     }
 }
