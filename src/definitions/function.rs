@@ -1,7 +1,10 @@
 use crate::lexer::Token;
 
 
-pub struct FunctionDef {}
+pub struct FunctionDef {
+    name: String,
+    privacy: Option<String>
+}
 
 
 impl FunctionDef {
@@ -9,17 +12,13 @@ impl FunctionDef {
         where I: Iterator<Item = Token>
     {
         let mut token = tokens.next().unwrap();
+        let (mut name, mut privacy) = (String::with_capacity(20), None);
 
-        // Loop through tokens until FunctionEnd is reached
-        // This should all build a FunctionDef object
         loop {
             match token {
-                Token::FunctionName(_, n) => println!("Found function with name: {}", n),
-                Token::FunctionPrivacy(_, p) => println!("And privacy: {:?}", p),
-                Token::FunctionEnd(_) => {
-                    println!("Function ends now");
-                    break;
-                },
+                Token::FunctionName(_, n) => name = n,
+                Token::FunctionPrivacy(_, p) => privacy = p,
+                Token::FunctionEnd(_) => break,
                 _ => ()
             }
 
@@ -30,6 +29,9 @@ impl FunctionDef {
             }
         }
 
-        FunctionDef {}
+        FunctionDef {
+            name,
+            privacy
+        }
     }
 }
