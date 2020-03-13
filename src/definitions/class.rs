@@ -46,8 +46,12 @@ impl ClassDef {
     }
 
 
-    pub fn methods(&self) -> &Vec<FunctionDef> {
-        &self.methods
+    pub fn methods(&self) -> Option<&Vec<FunctionDef>> {
+        if self.methods.is_empty() {
+            return None;
+        }
+
+        Some(&self.methods)
     }
 }
 
@@ -89,7 +93,7 @@ mod tests {
         assert_eq!(*class.name(), name);
 
         // Methods exist
-        assert_eq!(class.methods().len(), 2);
+        assert_eq!(class.methods().unwrap().len(), 2);
     }
 
 
@@ -107,6 +111,6 @@ mod tests {
         let class = ClassDef::new(&mut tokens.into_iter());
 
         // There should be no methods
-        assert!(class.methods().is_empty());
+        assert!(class.methods().is_none());
     }
 }
