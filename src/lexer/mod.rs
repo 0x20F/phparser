@@ -1,6 +1,6 @@
 mod token;
 
-use std::io::{Read, BufRead, BufReader};
+use std::io::{BufRead, BufReader};
 use regex::Regex;
 
 pub use token::Token;
