@@ -39,6 +39,16 @@ impl ClassDef {
             methods
         }
     }
+
+
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
+
+    pub fn methods(&self) -> &Vec<FunctionDef> {
+        &self.methods
+    }
 }
 
 
