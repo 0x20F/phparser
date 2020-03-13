@@ -57,7 +57,7 @@ pub struct FileDef {
     pub name: String,
     pub namespace: Option<String>,
     pub dependencies: Vec<String>,
-    pub classes: Option<Vec<ClassDef>>
+    pub classes: Vec<ClassDef>
 }
 
 
@@ -104,7 +104,7 @@ impl FileDef {
             name,
             namespace,
             dependencies,
-            classes: if classes.is_empty() { None } else { Some(classes) }
+            classes
         }
     }
 
