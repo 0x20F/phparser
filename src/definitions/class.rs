@@ -54,7 +54,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn create_class_with_methods() {
+    fn create_with_methods() {
         let name = String::from("TestClass");
         let fn_name = String::from("test_function");
 
@@ -85,7 +85,7 @@ mod tests {
 
 
     #[test]
-    fn create_class_without_methods() {
+    fn create_without_methods() {
         let name = String::from("TestClass");
 
         let tokens = vec![
