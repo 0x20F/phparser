@@ -15,19 +15,17 @@ impl ClassDef {
         let mut token = tokens.next().unwrap();
 
         let mut methods = vec![];
+        let mut name = String::with_capacity(20);
 
         // Loop through tokens until ClassEnd is reached
         // This should all build a ClassDef object
         loop {
             match token {
-                Token::ClassName(_, n) => println!("Theres a class name: {}", n),
+                Token::ClassName(_, n) => name = n,
 
                 Token::FunctionStart(_) => methods.push(FunctionDef::new(&mut tokens)),
 
-                Token::ClassEnd(_) => {
-                    println!("Class end now");
-                    break;
-                },
+                Token::ClassEnd(_) => break,
                 _ => ()
             }
 
@@ -39,7 +37,7 @@ impl ClassDef {
         }
 
         ClassDef {
-            name: String::from(""),
+            name,
             methods: if methods.is_empty() { None } else { Some(methods) }
         }
     }
