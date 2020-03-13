@@ -17,8 +17,6 @@ impl ClassDef {
         let mut methods = vec![];
         let mut name = String::with_capacity(20);
 
-        // Loop through tokens until ClassEnd is reached
-        // This should all build a ClassDef object
         loop {
             match token {
                 Token::ClassName(_, n) => name = n,
