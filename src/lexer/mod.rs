@@ -157,3 +157,67 @@ impl Lexer {
         tokens
     }
 }
+
+
+
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn tokenize_class() {
+        let def = String::from("class TestClass");
+        let pos: u64 = 51;
+
+        let tokens = Lexer::tokenize_class_definition(pos, &def);
+
+        for token in tokens {
+            match token {
+                Token::ClassStart(p) => assert_eq!(p, pos),
+                Token::ClassName(_, n) => assert_eq!(n, "TestClass"),
+                _ => ()
+            }
+        }
+    }
+
+
+    #[test]
+    fn tokenize_function() {
+        let def = String::from("function test_function() {");
+        let pos = 5131;
+
+        let tokens = Lexer::tokenize_function_definition(pos, &def);
+
+        for token in tokens {
+            match token {
+                Token::FunctionStart(p) => assert_eq!(p, pos),
+                Token::FunctionName(_, n) => assert_eq!(n, "test_function"),
+                Token::FunctionPrivacy(_, p) => assert!(p.is_none()),
+                _ => ()
+            }
+        }
+    }
+
+
+    #[test]
+    fn tokenize_method() {
+        // Only test that the privacy option isn't empty, rest is identical
+        let def = String::from("protected function test_function() {");
+        let pos = 1337;
+
+        let tokens = Lexer::tokenize_function_definition(pos, &def);
+
+        for token in tokens {
+            match token {
+                Token::FunctionPrivacy(_, p) => assert!(p.is_some()),
+                _ => ()
+            }
+        }
+    }
+}
