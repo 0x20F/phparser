@@ -4,7 +4,7 @@ use crate::definitions::FunctionDef;
 
 pub struct ClassDef {
     name: String,
-    methods: Option<Vec<FunctionDef>>
+    methods: Vec<FunctionDef>
 }
 
 
@@ -36,7 +36,7 @@ impl ClassDef {
 
         ClassDef {
             name,
-            methods: if methods.is_empty() { None } else { Some(methods) }
+            methods
         }
     }
 }
@@ -79,8 +79,7 @@ mod tests {
         assert_eq!(class.name, name);
 
         // Methods exist
-        assert!(class.methods.is_some());
-        assert_eq!(class.methods.unwrap().len(), 2);
+        assert_eq!(class.methods.len(), 2);
     }
 
 
@@ -98,6 +97,6 @@ mod tests {
         let class = ClassDef::new(&mut tokens.into_iter());
 
         // There should be no methods
-        assert!(class.methods.is_none());
+        assert!(class.methods.is_empty());
     }
 }
