@@ -38,6 +38,6 @@ fn parse_file() {
     // For now just check if you get a thing back
     let file = parser.parse_file(file_path.to_path_buf());
 
-    assert_eq!(file_path, file.path);
-    assert_eq!(file_name, file.name);
+    assert_eq!(file_path, *file.path());
+    assert_eq!(file_name, *file.name());
 }

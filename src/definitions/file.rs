@@ -53,11 +53,11 @@ impl FileStream {
 
 
 pub struct FileDef {
-    pub path: PathBuf,
-    pub name: String,
-    pub namespace: Option<String>,
-    pub dependencies: Vec<String>,
-    pub classes: Vec<ClassDef>
+    path: PathBuf,
+    name: String,
+    namespace: Option<String>,
+    dependencies: Vec<String>,
+    classes: Vec<ClassDef>
 }
 
 
@@ -106,6 +106,39 @@ impl FileDef {
             dependencies,
             classes
         }
+    }
+
+
+    pub fn path(&self) -> &PathBuf {
+        &self.path
+    }
+
+
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
+
+    pub fn namespace(&self) -> Option<&String> {
+        self.namespace.as_ref()
+    }
+
+
+    pub fn dependencies(&self) -> Option<&Vec<String>> {
+        if self.dependencies.is_empty() {
+            return None;
+        }
+
+        Some(&self.dependencies)
+    }
+
+
+    pub fn classes(&self) -> Option<&Vec<ClassDef>> {
+        if self.classes.is_empty() {
+            return None;
+        }
+
+        Some(&self.classes)
     }
 
 
