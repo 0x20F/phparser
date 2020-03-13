@@ -40,3 +40,64 @@ impl ClassDef {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn create_class_with_methods() {
+        let name = String::from("TestClass");
+        let fn_name = String::from("test_function");
+
+        let tokens = vec![
+            Token::ClassStart(1),
+            Token::ClassName(1, name.clone()),
+
+            Token::FunctionStart(1),
+            Token::FunctionName(1, fn_name.clone()),
+            Token::FunctionEnd(1),
+
+            Token::FunctionStart(1),
+            Token::FunctionName(1, fn_name.clone()),
+            Token::FunctionEnd(1),
+
+            Token::ClassEnd(1)
+        ];
+
+        let class = ClassDef::new(&mut tokens.into_iter());
+
+        // Name is the same
+        assert_eq!(class.name, name);
+
+        // Methods exist
+        assert!(class.methods.is_some());
+        assert_eq!(class.methods.unwrap().len(), 2);
+    }
+
+
+    #[test]
+    fn create_class_without_methods() {
+        let name = String::from("TestClass");
+
+        let tokens = vec![
+            Token::ClassStart(1),
+            Token::ClassName(1, name.clone()),
+
+            Token::ClassEnd(1)
+        ];
+
+        let class = ClassDef::new(&mut tokens.into_iter());
+
+        // There should be no methods
+        assert!(class.methods.is_none());
+    }
+}
