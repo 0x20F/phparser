@@ -86,10 +86,10 @@ mod tests {
         let class = ClassDef::new(&mut tokens.into_iter());
 
         // Name is the same
-        assert_eq!(class.name, name);
+        assert_eq!(*class.name(), name);
 
         // Methods exist
-        assert_eq!(class.methods.len(), 2);
+        assert_eq!(class.methods().len(), 2);
     }
 
 
@@ -107,6 +107,6 @@ mod tests {
         let class = ClassDef::new(&mut tokens.into_iter());
 
         // There should be no methods
-        assert!(class.methods.is_empty());
+        assert!(class.methods().is_empty());
     }
 }

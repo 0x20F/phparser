@@ -41,8 +41,8 @@ impl FunctionDef {
     }
 
 
-    pub fn privacy(&self) -> &Option<String> {
-        &self.privacy
+    pub fn privacy(&self) -> Option<&String> {
+        self.privacy.as_ref()
     }
 }
 
@@ -73,8 +73,8 @@ mod tests {
         let function = FunctionDef::new(&mut tokens.into_iter());
 
         // Name and privacy should match those inside tokens
-        assert_eq!(function.name, name);
-        assert_eq!(function.privacy.unwrap(), privacy.unwrap());
+        assert_eq!(*function.name(), name);
+        assert_eq!(*function.privacy().unwrap(), privacy.unwrap());
     }
 
 
@@ -91,7 +91,7 @@ mod tests {
         let function = FunctionDef::new(&mut tokens.into_iter());
 
         // Name and privacy should match those inside tokens
-        assert_eq!(function.name, name);
-        assert!(function.privacy.is_none());
+        assert_eq!(*function.name(), name);
+        assert!(function.privacy().is_none());
     }
 }
