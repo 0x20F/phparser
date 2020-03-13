@@ -34,6 +34,16 @@ impl FunctionDef {
             privacy
         }
     }
+
+
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
+
+    pub fn privacy(&self) -> &Option<String> {
+        &self.privacy
+    }
 }
 
 
