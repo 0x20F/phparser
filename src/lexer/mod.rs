@@ -1,6 +1,5 @@
 mod token;
 
-use super::definitions::{FileStream};
 use std::io::{Read, BufRead, BufReader};
 use regex::Regex;
 

@@ -1,52 +1,8 @@
 use std::fs::File;
-use std::io::prelude::*;
 use std::io::{BufReader, SeekFrom};
 use std::path::{PathBuf};
 use crate::lexer::{Lexer, Token};
 use crate::definitions::ClassDef;
-
-
-pub struct FileStream {
-    pub buffer: BufReader<File>,
-    position: u64
-}
-
-
-impl FileStream {
-    pub fn new(path: &PathBuf) -> FileStream {
-        // Make sure you fail gracefully here
-        let file = File::open(path).unwrap();
-
-        let buffer = BufReader::new(file);
-
-        FileStream {
-            buffer,
-            position: 0
-        }
-    }
-
-
-    pub fn rewind(&mut self) {
-        self.buffer.seek(SeekFrom::Start(0)).unwrap();
-        self.position = 0;
-    }
-
-
-    pub fn jump_to(&mut self, line: u64) {
-        self.buffer.seek(SeekFrom::Start(line)).unwrap();
-
-        self.position = line;
-    }
-
-
-    pub fn next_line(&mut self) -> String {
-        let mut buf: String = String::new();
-
-        self.buffer.read_line(&mut buf).unwrap();
-
-        buf
-    }
-}
 
 
 
