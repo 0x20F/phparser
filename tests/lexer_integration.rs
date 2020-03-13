@@ -1,12 +1,15 @@
 use phparser::lexer::{Lexer, Token};
 use phparser::definitions::FileStream;
 use std::path::{Path};
+use std::io::BufReader;
+use std::fs::File;
 
 
 // Open a simple file stream for all functions to use
-fn setup_stream(path: &str) -> FileStream {
-    let p = Path::new(path);
-    FileStream::new(&p.to_path_buf())
+fn setup_stream(path: &str) -> BufReader<File> {
+    let f = File::open(path).unwrap();
+
+    BufReader::new(f)
 }
 
 

@@ -1,10 +1,11 @@
 mod token;
 
 use super::definitions::{FileStream};
-use std::io::{Read, BufRead};
+use std::io::{Read, BufRead, BufReader};
 use regex::Regex;
 
 pub use token::Token;
+use std::fs::File;
 
 
 lazy_static! {
@@ -35,7 +36,7 @@ pub struct Lexer {}
 
 
 impl Lexer {
-    pub fn tokenize(stream: &mut FileStream) -> Vec<Token> {
+    pub fn tokenize(stream: &mut BufReader<File>) -> Vec<Token> {
         let mut tokens: Vec<Token> = vec![];
         let mut stack: Vec<bool> = vec![];
 
@@ -52,7 +53,7 @@ impl Lexer {
         let (mut n, mut c, mut f, mut u) = (false, false, false, false);
 
         
-        for line in stream.buffer.by_ref().lines() {
+        for line in stream.lines() {
             let line = match line {
                 Ok(line) => line,
                 _ => break

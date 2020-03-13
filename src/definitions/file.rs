@@ -71,7 +71,7 @@ impl FileDef {
         let mut dependencies = vec![];
 
         let name = Self::parse_name(&path);
-        let mut stream = FileStream::new(&path);
+        let mut stream = Self::open_file(&path);
 
         // Turn it into an iterator to allow more control
         let mut tokens = Lexer::tokenize(&mut stream).into_iter();
@@ -150,5 +150,13 @@ impl FileDef {
             .collect();
 
         (*pieces.last().unwrap()).to_string()
+    }
+
+
+    fn open_file(path: &PathBuf) -> BufReader<File> {
+        // Make sure you fail gracefully here
+        let file = File::open(path).unwrap();
+
+        BufReader::new(file)
     }
 }
