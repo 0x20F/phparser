@@ -1,5 +1,4 @@
 use phparser::lexer::{Lexer, Token};
-use std::path::{Path};
 use std::io::BufReader;
 use std::fs::File;
 
