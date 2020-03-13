@@ -35,3 +35,53 @@ impl FunctionDef {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn create_method() {
+        let name = String::from("test_function");
+        let privacy = Some(String::from("protected"));
+
+        let tokens = vec![
+            Token::FunctionStart(1),
+            Token::FunctionName(1, name.clone()),
+            Token::FunctionPrivacy(1, privacy.clone()),
+            Token::FunctionEnd(1)
+        ];
+
+        let function = FunctionDef::new(&mut tokens.into_iter());
+
+        // Name and privacy should match those inside tokens
+        assert_eq!(function.name, name);
+        assert_eq!(function.privacy.unwrap(), privacy.unwrap());
+    }
+
+
+    #[test]
+    fn create_function() {
+        let name = String::from("test_function");
+
+        let tokens = vec![
+            Token::FunctionStart(1),
+            Token::FunctionName(1, name.clone()),
+            Token::FunctionEnd(1)
+        ];
+
+        let function = FunctionDef::new(&mut tokens.into_iter());
+
+        // Name and privacy should match those inside tokens
+        assert_eq!(function.name, name);
+        assert!(function.privacy.is_none());
+    }
+}
