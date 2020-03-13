@@ -19,7 +19,7 @@ lazy_static! {
 
 
     static ref FUNCTION: Regex =
-        Regex::new("(?P<privacy>[a-zA-Z]+)?(?: )?(?:static )?function (?P<name>[a-zA-Z0-9]+)\\(")
+        Regex::new("(?P<privacy>[a-zA-Z]+)?(?: )?(?:static )?function (?P<name>[a-zA-Z0-9_]+)\\(")
         .unwrap();
 
 
