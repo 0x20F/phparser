@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::{PathBuf};
 use crate::lexer::{Lexer, Token};
-use crate::definitions::ClassDef;
+use crate::definitions::{ClassDef, FunctionDef};
 
 
 
@@ -13,7 +13,8 @@ pub struct FileDef {
     name: String,
     namespace: Option<String>,
     dependencies: Vec<String>,
-    classes: Vec<ClassDef>
+    classes: Vec<ClassDef>,
+    functions: Vec<FunctionDef>
 }
 
 
@@ -33,7 +34,7 @@ impl FileDef {
         let mut tokens = Lexer::tokenize(&mut stream);
 
         let mut classes = vec![];
-
+        let functions = vec![];
 
         for token in tokens {
             match token {
@@ -53,7 +54,8 @@ impl FileDef {
             name,
             namespace,
             dependencies,
-            classes
+            classes,
+            functions
         }
     }
 
@@ -88,6 +90,26 @@ impl FileDef {
         }
 
         Some(&self.classes)
+    }
+
+
+    pub fn add_class(&mut self) {
+        self.classes.push(ClassDef::new());
+    }
+
+
+    pub fn last_class(&mut self) -> Option<&mut ClassDef> {
+        self.classes.last_mut()
+    }
+
+
+    pub fn add_function(&mut self) {
+        self.functions.push(FunctionDef::new());
+    }
+
+
+    pub fn last_function(&mut self) -> Option<&mut FunctionDef> {
+        self.functions.last_mut()
     }
 
 
