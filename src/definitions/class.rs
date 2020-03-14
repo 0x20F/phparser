@@ -10,12 +10,9 @@ pub struct ClassDef {
 
 impl ClassDef {
     pub fn new() -> Self {
-        let mut methods = vec![];
-        let mut name = String::with_capacity(20);
-
         ClassDef {
-            name,
-            methods
+            name: String::with_capacity(20),
+            methods: vec![]
         }
     }
 
