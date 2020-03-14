@@ -132,7 +132,13 @@ impl FileDef {
 impl ExtractTokens for FileDef {
     fn take(&mut self, token: Token) {
         match token {
-            _ => println!("Token received in file")
+            Token::FunctionStart => self.add_function(),
+
+            _ => {
+                if let Some(function) = self.last_function() {
+                    function.take(token);
+                }
+            }
         }
     }
 }
