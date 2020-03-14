@@ -42,7 +42,7 @@ impl FunctionDef {
         match token {
             Token::FunctionName(n) => self.set_name(n),
             Token::FunctionPrivacy(p) => self.set_privacy(p),
-            _ => println!("{:?}", token)
+            _ => ()
         }
     }
 }
