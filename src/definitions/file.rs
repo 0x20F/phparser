@@ -42,8 +42,10 @@ impl FileDef {
                     Token::Namespace(n) => namespace = Some(n),
                     Token::Import(i) => dependencies.push(i),
 
-                    Token::ClassStart => classes.push(ClassDef::new(&mut tokens)),
-                    _ => break
+                    Token::ClassStart => classes.push(ClassDef::new()),
+                    Token::ClassEnd => (),
+
+                    _ => classes.last_mut().unwrap().parse(token)
                 }
 
                 if let Some(t) = tokens.next() {
