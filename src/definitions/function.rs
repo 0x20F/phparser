@@ -1,4 +1,5 @@
 use crate::lexer::Token;
+use crate::definitions::ExtractTokens;
 
 
 pub struct FunctionDef {
@@ -34,9 +35,11 @@ impl FunctionDef {
     pub fn privacy(&self) -> Option<&String> {
         self.privacy.as_ref()
     }
+}
 
 
-    pub fn parse(&mut self, token: Token) {
+impl ExtractTokens for FunctionDef {
+    fn take(&mut self, token: Token) {
         match token {
             Token::FunctionName(n) => self.set_name(n),
             Token::FunctionPrivacy(p) => self.set_privacy(p),

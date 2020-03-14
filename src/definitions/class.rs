@@ -1,5 +1,5 @@
 use crate::lexer::Token;
-use crate::definitions::FunctionDef;
+use crate::definitions::{ FunctionDef, ExtractTokens };
 
 
 pub struct ClassDef {
@@ -44,9 +44,11 @@ impl ClassDef {
     fn last_method(&mut self) -> Option<&mut FunctionDef> {
         self.methods.last_mut()
     }
+}
 
 
-    pub fn parse(&mut self, token: Token) {
+impl ExtractTokens for ClassDef {
+    fn take(&mut self, token: Token) {
         match token {
             Token::ClassName(n) => self.set_name(n),
 
@@ -55,7 +57,7 @@ impl ClassDef {
 
             _ => {
                 if let Some(method) = self.last_method() {
-                    method.parse(token);
+                    method.take(token);
                 }
             }
         }

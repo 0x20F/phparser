@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::{PathBuf};
 use crate::lexer::{Lexer, Token};
-use crate::definitions::{ClassDef, FunctionDef};
+use crate::definitions::{ClassDef, FunctionDef, ExtractTokens};
 
 
 
@@ -46,7 +46,7 @@ impl FileDef {
 
                 _ => {
                     if let Some(class) = classes.last_mut() {
-                        class.parse(token);
+                        class.take(token);
                     }
                 }
             }
