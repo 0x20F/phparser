@@ -54,6 +54,7 @@ impl ClassDef {
             Token::ClassName(n) => self.set_name(n),
 
             Token::FunctionStart => self.new_method(),
+            Token::FunctionEnd => (),
             _ => {
                 match self.last_method() {
                     Some(m) => m.parse(token),
