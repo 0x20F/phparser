@@ -75,6 +75,21 @@ impl FileDef {
     }
 
 
+    fn add_class(&mut self) {
+        self.classes.push(ClassDef::default());
+    }
+
+
+    fn add_function(&mut self) {
+        self.functions.push(FunctionDef::default());
+    }
+
+
+    fn last_function(&mut self) -> Option<&mut FunctionDef> {
+        self.functions.last_mut()
+    }
+
+
     pub fn dependencies(&self) -> Option<&Vec<String>> {
         if self.dependencies.is_empty() {
             return None;
@@ -90,21 +105,6 @@ impl FileDef {
         }
 
         Some(&self.classes)
-    }
-
-
-    fn add_class(&mut self) {
-        self.classes.push(ClassDef::default());
-    }
-
-
-    fn add_function(&mut self) {
-        self.functions.push(FunctionDef::default());
-    }
-
-
-    fn last_function(&mut self) -> Option<&mut FunctionDef> {
-        self.functions.last_mut()
     }
 
 
