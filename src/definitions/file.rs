@@ -31,7 +31,7 @@ impl FileDef {
         let mut stream = Self::open_file(&path);
 
         // Turn it into an iterator to allow more control
-        let mut tokens = Lexer::tokenize(&mut stream);
+        let tokens = Lexer::tokenize(&mut stream);
 
         let mut classes = vec![];
         let functions = vec![];
@@ -44,7 +44,11 @@ impl FileDef {
                 Token::ClassStart => classes.push(ClassDef::new()),
                 Token::ClassEnd => (),
 
-                _ => classes.last_mut().unwrap().parse(token)
+                _ => {
+                    if let Some(class) = classes.last_mut() {
+                        class.parse(token);
+                    }
+                }
             }
         }
 

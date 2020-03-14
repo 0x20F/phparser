@@ -54,9 +54,8 @@ impl ClassDef {
             Token::FunctionEnd => (),
 
             _ => {
-                match self.last_method() {
-                    Some(m) => m.parse(token),
-                    _ => ()
+                if let Some(method) = self.last_method() {
+                    method.parse(token);
                 }
             }
         }
