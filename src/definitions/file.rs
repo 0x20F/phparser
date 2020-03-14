@@ -94,12 +94,12 @@ impl FileDef {
 
 
     fn add_class(&mut self) {
-        self.classes.push(ClassDef::new());
+        self.classes.push(ClassDef::default());
     }
 
 
     fn add_function(&mut self) {
-        self.functions.push(FunctionDef::new());
+        self.functions.push(FunctionDef::default());
     }
 
 

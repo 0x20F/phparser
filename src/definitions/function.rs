@@ -2,6 +2,7 @@ use crate::lexer::Token;
 use crate::definitions::ExtractTokens;
 
 
+#[derive(Default)]
 pub struct FunctionDef {
     name: String,
     privacy: Option<String>
@@ -9,14 +10,6 @@ pub struct FunctionDef {
 
 
 impl FunctionDef {
-    pub fn new() -> Self {
-        FunctionDef {
-            name: String::with_capacity(20),
-            privacy: None
-        }
-    }
-
-
     pub fn name(&self) -> &String {
         &self.name
     }

@@ -2,6 +2,7 @@ use crate::lexer::Token;
 use crate::definitions::{ FunctionDef, ExtractTokens };
 
 
+#[derive(Default)]
 pub struct ClassDef {
     name: String,
     methods: Vec<FunctionDef>
@@ -9,14 +10,6 @@ pub struct ClassDef {
 
 
 impl ClassDef {
-    pub fn new() -> Self {
-        ClassDef {
-            name: String::with_capacity(20),
-            methods: vec![]
-        }
-    }
-
-
     pub fn name(&self) -> &String {
         &self.name
     }
@@ -31,7 +24,7 @@ impl ClassDef {
     }
 
     fn new_method(&mut self) {
-        self.methods.push(FunctionDef::new());
+        self.methods.push(FunctionDef::default());
     }
 
 
