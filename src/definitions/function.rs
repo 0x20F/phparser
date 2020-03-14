@@ -16,9 +16,9 @@ impl FunctionDef {
 
         loop {
             match token {
-                Token::FunctionName(_, n) => name = n,
-                Token::FunctionPrivacy(_, p) => privacy = p,
-                Token::FunctionEnd(_) => break,
+                Token::FunctionName(n) => name = n,
+                Token::FunctionPrivacy(p) => privacy = p,
+                Token::FunctionEnd => break,
                 _ => ()
             }
 
@@ -64,10 +64,10 @@ mod tests {
         let privacy = Some(String::from("protected"));
 
         let tokens = vec![
-            Token::FunctionStart(1),
-            Token::FunctionName(1, name.clone()),
-            Token::FunctionPrivacy(1, privacy.clone()),
-            Token::FunctionEnd(1)
+            Token::FunctionStart,
+            Token::FunctionName(name.clone()),
+            Token::FunctionPrivacy(privacy.clone()),
+            Token::FunctionEnd
         ];
 
         let function = FunctionDef::new(&mut tokens.into_iter());
@@ -83,9 +83,9 @@ mod tests {
         let name = String::from("test_function");
 
         let tokens = vec![
-            Token::FunctionStart(1),
-            Token::FunctionName(1, name.clone()),
-            Token::FunctionEnd(1)
+            Token::FunctionStart,
+            Token::FunctionName(name.clone()),
+            Token::FunctionEnd
         ];
 
         let function = FunctionDef::new(&mut tokens.into_iter());

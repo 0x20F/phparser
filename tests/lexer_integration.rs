@@ -35,7 +35,7 @@ fn import_tokens() {
 
     for token in tokens {
         match token {
-            Token::Import(_, _) => count = count + 1,
+            Token::Import(_) => count = count + 1,
             _ => continue
         };
     }
@@ -74,10 +74,10 @@ fn function_tokens() {
 
     for token in tokens {
         match token {
-            Token::FunctionStart(_) |
-            Token::FunctionEnd(_) |
-            Token::FunctionPrivacy(_, _) |
-            Token::FunctionName(_, _) => counter = counter + 1,
+            Token::FunctionStart |
+            Token::FunctionEnd |
+            Token::FunctionPrivacy(_) |
+            Token::FunctionName(_) => counter = counter + 1,
             _ => continue
         };
     }

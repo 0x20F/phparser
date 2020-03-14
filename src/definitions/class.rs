@@ -19,11 +19,11 @@ impl ClassDef {
 
         loop {
             match token {
-                Token::ClassName(_, n) => name = n,
+                Token::ClassName(n) => name = n,
 
-                Token::FunctionStart(_) => methods.push(FunctionDef::new(&mut tokens)),
+                Token::FunctionStart => methods.push(FunctionDef::new(&mut tokens)),
 
-                Token::ClassEnd(_) => break,
+                Token::ClassEnd => break,
                 _ => ()
             }
 
@@ -73,18 +73,18 @@ mod tests {
         let fn_name = String::from("test_function");
 
         let tokens = vec![
-            Token::ClassStart(1),
-            Token::ClassName(1, name.clone()),
+            Token::ClassStart,
+            Token::ClassName(name.clone()),
 
-            Token::FunctionStart(1),
-            Token::FunctionName(1, fn_name.clone()),
-            Token::FunctionEnd(1),
+            Token::FunctionStart,
+            Token::FunctionName(fn_name.clone()),
+            Token::FunctionEnd,
 
-            Token::FunctionStart(1),
-            Token::FunctionName(1, fn_name.clone()),
-            Token::FunctionEnd(1),
+            Token::FunctionStart,
+            Token::FunctionName(fn_name.clone()),
+            Token::FunctionEnd,
 
-            Token::ClassEnd(1)
+            Token::ClassEnd
         ];
 
         let class = ClassDef::new(&mut tokens.into_iter());
@@ -102,10 +102,10 @@ mod tests {
         let name = String::from("TestClass");
 
         let tokens = vec![
-            Token::ClassStart(1),
-            Token::ClassName(1, name.clone()),
+            Token::ClassStart,
+            Token::ClassName(name.clone()),
 
-            Token::ClassEnd(1)
+            Token::ClassEnd
         ];
 
         let class = ClassDef::new(&mut tokens.into_iter());

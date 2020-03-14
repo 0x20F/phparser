@@ -39,10 +39,10 @@ impl FileDef {
 
             loop {
                 match token {
-                    Token::Namespace(_, n) => namespace = Some(n),
-                    Token::Import(_, i) => dependencies.push(i),
+                    Token::Namespace(n) => namespace = Some(n),
+                    Token::Import(i) => dependencies.push(i),
 
-                    Token::ClassStart(_) => classes.push(ClassDef::new(&mut tokens)),
+                    Token::ClassStart => classes.push(ClassDef::new(&mut tokens)),
                     _ => break
                 }
 
