@@ -9,35 +9,19 @@ pub struct ClassDef {
 
 
 impl ClassDef {
-    pub fn new<I>(mut tokens: &mut I) -> Self
-        where I: Iterator<Item = Token>
-    {
-        let mut token = tokens.next().unwrap();
-
+    pub fn new() -> Self {
         let mut methods = vec![];
         let mut name = String::with_capacity(20);
-
-        loop {
-            match token {
-                Token::ClassName(n) => name = n,
-
-                Token::FunctionStart => methods.push(FunctionDef::new(&mut tokens)),
-
-                Token::ClassEnd => break,
-                _ => ()
-            }
-
-            if let Some(t) = tokens.next() {
-                token = t;
-            } else {
-                break;
-            }
-        }
 
         ClassDef {
             name,
             methods
         }
+    }
+
+
+    pub fn set_name(&mut self, name: String) {
+        self.name = name;
     }
 
 
@@ -53,6 +37,31 @@ impl ClassDef {
 
         Some(&self.methods)
     }
+
+
+    fn new_method(&mut self) {
+        self.methods.push(FunctionDef::new());
+    }
+
+
+    fn last_method(&mut self) -> Option<&mut FunctionDef> {
+        self.methods.last_mut()
+    }
+
+
+    pub fn parse(&mut self, token: Token) {
+        match token {
+            Token::ClassName(n) => self.set_name(n),
+
+            Token::FunctionStart => self.new_method(),
+            _ => {
+                match self.last_method() {
+                    Some(m) => m.parse(token),
+                    _ => ()
+                }
+            }
+        }
+    }
 }
 
 
@@ -63,7 +72,7 @@ impl ClassDef {
 
 
 
-#[cfg(test)]
+/*#[cfg(test)]
 mod tests {
     use super::*;
 
@@ -87,7 +96,7 @@ mod tests {
             Token::ClassEnd
         ];
 
-        let class = ClassDef::new(&mut tokens.into_iter());
+        let class = ClassDef::new();
 
         // Name is the same
         assert_eq!(*class.name(), name);
@@ -108,9 +117,9 @@ mod tests {
             Token::ClassEnd
         ];
 
-        let class = ClassDef::new(&mut tokens.into_iter());
+        let class = ClassDef::new();
 
         // There should be no methods
         assert!(class.methods().is_none());
     }
-}
+}*/
