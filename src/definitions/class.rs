@@ -52,6 +52,7 @@ impl ClassDef {
 
             Token::FunctionStart => self.new_method(),
             Token::FunctionEnd => (),
+
             _ => {
                 match self.last_method() {
                     Some(m) => m.parse(token),
@@ -61,63 +62,3 @@ impl ClassDef {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-/*#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn create_with_methods() {
-        let name = String::from("TestClass");
-        let fn_name = String::from("test_function");
-
-        let tokens = vec![
-            Token::ClassStart,
-            Token::ClassName(name.clone()),
-
-            Token::FunctionStart,
-            Token::FunctionName(fn_name.clone()),
-            Token::FunctionEnd,
-
-            Token::FunctionStart,
-            Token::FunctionName(fn_name.clone()),
-            Token::FunctionEnd,
-
-            Token::ClassEnd
-        ];
-
-        let class = ClassDef::new();
-
-        // Name is the same
-        assert_eq!(*class.name(), name);
-
-        // Methods exist
-        assert_eq!(class.methods().unwrap().len(), 2);
-    }
-
-
-    #[test]
-    fn create_without_methods() {
-        let name = String::from("TestClass");
-
-        let tokens = vec![
-            Token::ClassStart,
-            Token::ClassName(name.clone()),
-
-            Token::ClassEnd
-        ];
-
-        let class = ClassDef::new();
-
-        // There should be no methods
-        assert!(class.methods().is_none());
-    }
-}*/
