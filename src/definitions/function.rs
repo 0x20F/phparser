@@ -8,31 +8,23 @@ pub struct FunctionDef {
 
 
 impl FunctionDef {
-    pub fn new<I>(tokens: &mut I) -> Self
-        where I: Iterator<Item = Token>
-    {
-        let mut token = tokens.next().unwrap();
+    pub fn new() -> Self {
         let (mut name, mut privacy) = (String::with_capacity(20), None);
-
-        loop {
-            match token {
-                Token::FunctionName(n) => name = n,
-                Token::FunctionPrivacy(p) => privacy = p,
-                Token::FunctionEnd => break,
-                _ => ()
-            }
-
-            if let Some(t) = tokens.next() {
-                token = t;
-            } else {
-                break;
-            }
-        }
 
         FunctionDef {
             name,
             privacy
         }
+    }
+
+
+    pub fn set_name(&mut self, name: String) {
+        self.name = name;
+    }
+
+
+    pub fn set_privacy(&mut self, privacy: Option<String>) {
+        self.privacy = privacy;
     }
 
 
@@ -44,6 +36,15 @@ impl FunctionDef {
     pub fn privacy(&self) -> Option<&String> {
         self.privacy.as_ref()
     }
+
+
+    pub fn parse(&mut self, token: Token) {
+        match token {
+            Token::FunctionName(n) => self.set_name(n),
+            Token::FunctionPrivacy(p) => self.set_privacy(p),
+            _ => println!("{:?}", token)
+        }
+    }
 }
 
 
@@ -54,7 +55,7 @@ impl FunctionDef {
 
 
 
-#[cfg(test)]
+/*#[cfg(test)]
 mod tests {
     use super::*;
 
@@ -94,4 +95,4 @@ mod tests {
         assert_eq!(*function.name(), name);
         assert!(function.privacy().is_none());
     }
-}
+}*/
