@@ -93,17 +93,17 @@ impl FileDef {
     }
 
 
-    pub fn add_class(&mut self) {
+    fn add_class(&mut self) {
         self.classes.push(ClassDef::new());
     }
 
 
-    pub fn add_function(&mut self) {
+    fn add_function(&mut self) {
         self.functions.push(FunctionDef::new());
     }
 
 
-    pub fn last_function(&mut self) -> Option<&mut FunctionDef> {
+    fn last_function(&mut self) -> Option<&mut FunctionDef> {
         self.functions.last_mut()
     }
 

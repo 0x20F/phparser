@@ -17,16 +17,6 @@ impl FunctionDef {
     }
 
 
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
-    }
-
-
-    pub fn set_privacy(&mut self, privacy: Option<String>) {
-        self.privacy = privacy;
-    }
-
-
     pub fn name(&self) -> &String {
         &self.name
     }
@@ -41,8 +31,8 @@ impl FunctionDef {
 impl ExtractTokens for FunctionDef {
     fn take(&mut self, token: Token) {
         match token {
-            Token::FunctionName(n) => self.set_name(n),
-            Token::FunctionPrivacy(p) => self.set_privacy(p),
+            Token::FunctionName(n) => self.name = n,
+            Token::FunctionPrivacy(p) => self.privacy = p,
             _ => ()
         }
     }

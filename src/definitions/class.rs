@@ -17,11 +17,6 @@ impl ClassDef {
     }
 
 
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
-    }
-
-
     pub fn name(&self) -> &String {
         &self.name
     }
@@ -34,7 +29,6 @@ impl ClassDef {
 
         Some(&self.methods)
     }
-
 
     fn new_method(&mut self) {
         self.methods.push(FunctionDef::new());
@@ -50,7 +44,7 @@ impl ClassDef {
 impl ExtractTokens for ClassDef {
     fn take(&mut self, token: Token) {
         match token {
-            Token::ClassName(n) => self.set_name(n),
+            Token::ClassName(n) => self.name = n,
 
             Token::FunctionStart => self.new_method(),
             Token::FunctionEnd => (),
