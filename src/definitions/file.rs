@@ -20,12 +20,7 @@ pub struct FileDef {
 
 impl FileDef {
     pub fn new(path: PathBuf) -> FileDef {
-
-        let mut namespace = None;
-        // Dependencies should be references to the files that contain the classes?
-        // or maybe just have a function find_dependencies() that returns a list
-        // of file object references?
-        let mut dependencies = vec![];
+        let mut def = FileDef::default();
 
         let name = Self::parse_name(&path);
         let mut stream = Self::open_file(&path);
@@ -33,34 +28,35 @@ impl FileDef {
         // Turn it into an iterator to allow more control
         let tokens = Lexer::tokenize(&mut stream);
 
-        let mut classes = vec![];
-        let functions = vec![];
+        let mut in_class = false;
 
         for token in tokens {
             match token {
-                Token::Namespace(n) => namespace = Some(n),
-                Token::Import(i) => dependencies.push(i),
+                Token::Namespace(n) => def.namespace = Some(n),
+                Token::Import(i) => def.dependencies.push(i),
 
-                Token::ClassStart => classes.push(ClassDef::new()),
-                Token::ClassEnd => (),
+                Token::ClassStart => {
+                    def.add_class();
+                    in_class = true;
+                },
+                Token::ClassEnd => in_class = false,
 
-                _ => {
-                    if let Some(class) = classes.last_mut() {
+                // If in class, pass tokens on to class definition
+                _ if in_class => {
+                    if let Some(class) = def.classes.last_mut() {
                         class.take(token);
                     }
                 }
+
+                // If still in this file def, pass tokens to self
+                _ => def.take(token)
             }
         }
 
 
-        FileDef {
-            path,
-            name,
-            namespace,
-            dependencies,
-            classes,
-            functions
-        }
+        def.path = path;
+        def.name = name;
+        def
     }
 
 
@@ -102,11 +98,6 @@ impl FileDef {
     }
 
 
-    pub fn last_class(&mut self) -> Option<&mut ClassDef> {
-        self.classes.last_mut()
-    }
-
-
     pub fn add_function(&mut self) {
         self.functions.push(FunctionDef::new());
     }
@@ -133,5 +124,30 @@ impl FileDef {
         let file = File::open(path).unwrap();
 
         BufReader::new(file)
+    }
+}
+
+
+
+impl ExtractTokens for FileDef {
+    fn take(&mut self, token: Token) {
+        match token {
+            _ => println!("Token received in file")
+        }
+    }
+}
+
+
+
+impl Default for FileDef {
+    fn default() -> Self {
+        Self {
+            path: PathBuf::new(),
+            name: String::from(""),
+            namespace: None,
+            dependencies: vec![],
+            classes: vec![],
+            functions: vec![]
+        }
     }
 }
