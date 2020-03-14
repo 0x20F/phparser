@@ -9,11 +9,9 @@ pub struct FunctionDef {
 
 impl FunctionDef {
     pub fn new() -> Self {
-        let (mut name, mut privacy) = (String::with_capacity(20), None);
-
         FunctionDef {
-            name,
-            privacy
+            name: String::with_capacity(20),
+            privacy: None
         }
     }
 
