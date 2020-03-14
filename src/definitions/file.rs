@@ -30,29 +30,20 @@ impl FileDef {
         let mut stream = Self::open_file(&path);
 
         // Turn it into an iterator to allow more control
-        let mut tokens = Lexer::tokenize(&mut stream).into_iter();
+        let mut tokens = Lexer::tokenize(&mut stream);
 
         let mut classes = vec![];
 
-        if let Some(first) = tokens.next() {
-            let mut token = first;
 
-            loop {
-                match token {
-                    Token::Namespace(n) => namespace = Some(n),
-                    Token::Import(i) => dependencies.push(i),
+        for token in tokens {
+            match token {
+                Token::Namespace(n) => namespace = Some(n),
+                Token::Import(i) => dependencies.push(i),
 
-                    Token::ClassStart => classes.push(ClassDef::new()),
-                    Token::ClassEnd => (),
+                Token::ClassStart => classes.push(ClassDef::new()),
+                Token::ClassEnd => (),
 
-                    _ => classes.last_mut().unwrap().parse(token)
-                }
-
-                if let Some(t) = tokens.next() {
-                    token = t;
-                } else {
-                    break;
-                }
+                _ => classes.last_mut().unwrap().parse(token)
             }
         }
 
