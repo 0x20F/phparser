@@ -32,9 +32,6 @@ impl FileDef {
 
         for token in tokens {
             match token {
-                Token::Namespace(n) => def.namespace = Some(n),
-                Token::Import(i) => def.dependencies.push(i),
-
                 Token::ClassStart => {
                     def.add_class();
                     in_class = true;
@@ -48,7 +45,8 @@ impl FileDef {
                     }
                 }
 
-                // If still in this file def, pass tokens to self
+                // If still in this file def, pass tokens to self since tokens
+                // probably have to do with this file/this file's children
                 _ => def.take(token)
             }
         }
@@ -132,6 +130,9 @@ impl FileDef {
 impl ExtractTokens for FileDef {
     fn take(&mut self, token: Token) {
         match token {
+            Token::Namespace(n) => self.namespace = Some(n),
+            Token::Import(i) => self.dependencies.push(i),
+
             Token::FunctionStart => self.add_function(),
 
             _ => {
