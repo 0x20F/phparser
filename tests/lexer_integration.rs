@@ -1,12 +1,13 @@
 use phparser::lexer::{Lexer, Token};
-use phparser::definitions::FileStream;
-use std::path::{Path};
+use std::io::BufReader;
+use std::fs::File;
 
 
 // Open a simple file stream for all functions to use
-fn setup_stream(path: &str) -> FileStream {
-    let p = Path::new(path);
-    FileStream::new(&p.to_path_buf())
+fn setup_stream(path: &str) -> BufReader<File> {
+    let f = File::open(path).unwrap();
+
+    BufReader::new(f)
 }
 
 
@@ -34,7 +35,7 @@ fn import_tokens() {
 
     for token in tokens {
         match token {
-            Token::Import(_, _) => count = count + 1,
+            Token::Import(_) => count = count + 1,
             _ => continue
         };
     }
@@ -73,10 +74,10 @@ fn function_tokens() {
 
     for token in tokens {
         match token {
-            Token::FunctionStart(_) |
-            Token::FunctionEnd(_) |
-            Token::FunctionPrivacy(_, _) |
-            Token::FunctionName(_, _) => counter = counter + 1,
+            Token::FunctionStart |
+            Token::FunctionEnd |
+            Token::FunctionPrivacy(_) |
+            Token::FunctionName(_) => counter = counter + 1,
             _ => continue
         };
     }

@@ -1,108 +1,110 @@
 use std::fs::File;
-use std::io::prelude::*;
-use std::io::{BufReader, SeekFrom};
+use std::io::BufReader;
 use std::path::{PathBuf};
 use crate::lexer::{Lexer, Token};
-
-
-
-
-pub struct FileStream {
-    pub buffer: BufReader<File>,
-    position: u64
-}
-
-
-impl FileStream {
-    pub fn new(path: &PathBuf) -> FileStream {
-        // Make sure you fail gracefully here
-        let file = File::open(path).unwrap();
-
-        let buffer = BufReader::new(file);
-
-        FileStream {
-            buffer,
-            position: 0
-        }
-    }
-
-
-    pub fn rewind(&mut self) {
-        self.buffer.seek(SeekFrom::Start(0)).unwrap();
-        self.position = 0;
-    }
-
-
-    pub fn jump_to(&mut self, line: u64) {
-        self.buffer.seek(SeekFrom::Start(line)).unwrap();
-
-        self.position = line;
-    }
-
-
-    pub fn next_line(&mut self) -> String {
-        let mut buf: String = String::new();
-
-        self.buffer.read_line(&mut buf).unwrap();
-
-        buf
-    }
-}
+use crate::definitions::{ClassDef, FunctionDef, ExtractTokens};
 
 
 
 
 
 pub struct FileDef {
-    pub path: PathBuf,
-    pub name: String,
-    pub namespace: Option<String>,
-    pub dependencies: Vec<String>
+    path: PathBuf,
+    name: String,
+    namespace: Option<String>,
+    dependencies: Vec<String>,
+    classes: Vec<ClassDef>,
+    functions: Vec<FunctionDef>
 }
 
 
 impl FileDef {
     pub fn new(path: PathBuf) -> FileDef {
-
-        let mut namespace = None;
-        // Dependencies should be references to the files that contain the classes?
-        // or maybe just have a function find_dependencies() that returns a list
-        // of file object references?
-        let mut dependencies = vec![];
+        let mut def = FileDef::default();
 
         let name = Self::parse_name(&path);
-        let mut stream = FileStream::new(&path);
+        let mut stream = Self::open_file(&path);
 
         // Turn it into an iterator to allow more control
-        let mut tokens = Lexer::tokenize(&mut stream).into_iter();
+        let tokens = Lexer::tokenize(&mut stream);
 
-        if let Some(first) = tokens.next() {
-            let mut token = first;
+        let mut in_class = false;
 
-            loop {
-                match token {
-                    Token::Namespace(_, n) => namespace = Some(n),
-                    Token::Import(_, i) => dependencies.push(i),
+        for token in tokens {
+            match token {
+                Token::Namespace(n) => def.namespace = Some(n),
+                Token::Import(i) => def.dependencies.push(i),
 
-                    Token::ClassStart(_) => Self::build_class(&mut tokens),
-                    _ => break
+                Token::ClassStart => {
+                    def.add_class();
+                    in_class = true;
+                },
+                Token::ClassEnd => in_class = false,
+
+                // If in class, pass tokens on to class definition
+                _ if in_class => {
+                    if let Some(class) = def.classes.last_mut() {
+                        class.take(token);
+                    }
                 }
 
-                if let Some(t) = tokens.next() {
-                    token = t;
-                } else {
-                    break;
-                }
+                // If still in this file def, pass tokens to self
+                _ => def.take(token)
             }
         }
 
 
-        FileDef {
-            path,
-            name,
-            namespace,
-            dependencies
+        def.path = path;
+        def.name = name;
+        def
+    }
+
+
+    pub fn path(&self) -> &PathBuf {
+        &self.path
+    }
+
+
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
+
+    pub fn namespace(&self) -> Option<&String> {
+        self.namespace.as_ref()
+    }
+
+
+    fn add_class(&mut self) {
+        self.classes.push(ClassDef::default());
+    }
+
+
+    fn add_function(&mut self) {
+        self.functions.push(FunctionDef::default());
+    }
+
+
+    fn last_function(&mut self) -> Option<&mut FunctionDef> {
+        self.functions.last_mut()
+    }
+
+
+    pub fn dependencies(&self) -> Option<&Vec<String>> {
+        if self.dependencies.is_empty() {
+            return None;
         }
+
+        Some(&self.dependencies)
+    }
+
+
+    pub fn classes(&self) -> Option<&Vec<ClassDef>> {
+        if self.classes.is_empty() {
+            return None;
+        }
+
+        Some(&self.classes)
     }
 
 
@@ -117,58 +119,41 @@ impl FileDef {
     }
 
 
-    fn build_class<I>(mut tokens: &mut I)
-        where I: Iterator<Item = Token>
-    {
-        let mut token = tokens.next().unwrap();
+    fn open_file(path: &PathBuf) -> BufReader<File> {
+        // Make sure you fail gracefully here
+        let file = File::open(path).unwrap();
 
-        // Loop through tokens until ClassEnd is reached
-        // This should all build a ClassDef object
-        loop {
-            match token {
-                Token::ClassName(_, n) => println!("Theres a class name: {}", n),
+        BufReader::new(file)
+    }
+}
 
-                Token::FunctionStart(_) => Self::build_function(&mut tokens),
 
-                Token::ClassEnd(_) => {
-                    println!("Class end now");
-                    break;
-                },
-                _ => ()
-            }
 
-            if let Some(t) = tokens.next() {
-                token = t;
-            } else {
-                break;
+impl ExtractTokens for FileDef {
+    fn take(&mut self, token: Token) {
+        match token {
+            Token::FunctionStart => self.add_function(),
+
+            _ => {
+                if let Some(function) = self.last_function() {
+                    function.take(token);
+                }
             }
         }
     }
+}
 
 
-    fn build_function<I>(tokens: &mut I)
-        where I: Iterator<Item = Token>
-    {
-        let mut token = tokens.next().unwrap();
 
-        // Loop through tokens until FunctionEnd is reached
-        // This should all build a FunctionDef object
-        loop {
-            match token {
-                Token::FunctionName(_, n) => println!("Found function with name: {}", n),
-                Token::FunctionPrivacy(_, p) => println!("And privacy: {}", p.unwrap()),
-                Token::FunctionEnd(_) => {
-                    println!("Function ends now");
-                    break;
-                },
-                _ => ()
-            }
-
-            if let Some(t) = tokens.next() {
-                token = t;
-            } else {
-                break;
-            }
+impl Default for FileDef {
+    fn default() -> Self {
+        Self {
+            path: PathBuf::new(),
+            name: String::from(""),
+            namespace: None,
+            dependencies: vec![],
+            classes: vec![],
+            functions: vec![]
         }
     }
 }

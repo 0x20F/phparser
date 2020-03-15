@@ -1,13 +1,13 @@
 pub enum Token {
-    Namespace(u64, String),
-    Import(u64, String), // Will probably need support for PHP7 soon
+    Namespace(String),
+    Import(String), // Will probably need support for PHP7 soon
 
-    ClassStart(u64),
-    ClassName(u64, String),
-    ClassEnd(u64),
+    ClassStart,
+    ClassName(String),
+    ClassEnd,
 
-    FunctionStart(u64),
-    FunctionName(u64, String),
-    FunctionPrivacy(u64, Option<String>),
-    FunctionEnd(u64)
+    FunctionStart,
+    FunctionName(String),
+    FunctionPrivacy(Option<String>),
+    FunctionEnd
 }
