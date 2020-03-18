@@ -10,7 +10,7 @@ use definitions::FileDef;
 use std::path::{Path, PathBuf};
 use std::io::BufReader;
 use std::fs::File;
-use crate::lexer::Lexer;
+use crate::lexer::{Lexer, Token};
 
 
 #[derive(Default)]
@@ -57,10 +57,12 @@ impl Parser {
         let mut file = Self::open_file(&file_path);
         let tokens = Lexer::tokenize(&mut file);
 
-        let file_def = FileDef::default();
+        let mut file_def = FileDef::new(file_path);
 
         for token in tokens {
             match token {
+                Token::Import(i) => file_def.add_dependency(&i),
+                Token::Namespace(n) => file_def.set_namespace(&n),
                 _ => println!("{:?}", token)
             }
         }
