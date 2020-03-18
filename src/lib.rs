@@ -8,6 +8,9 @@ pub mod lexer;
 use walkdir::{WalkDir};
 use definitions::FileDef;
 use std::path::{Path, PathBuf};
+use std::io::BufReader;
+use std::fs::File;
+use crate::lexer::Lexer;
 
 
 #[derive(Default)]
@@ -51,8 +54,23 @@ impl Parser {
 
 
     pub fn parse_file(&self, file_path: PathBuf) -> FileDef {
+        let mut file = Self::open_file(&file_path);
+        let tokens = Lexer::tokenize(&mut file);
+
+        for token in tokens {
+            println!("{:?}", token);
+        }
+
+        // KEEP THIS HERE FOR OLD FUNCTIONALITY
         // New file struct -> pass path
         FileDef::new(file_path)
+    }
+
+
+    fn open_file(file_path: &PathBuf) -> BufReader<File> {
+        let file = File::open(file_path).unwrap();
+
+        BufReader::new(file)
     }
 }
 
