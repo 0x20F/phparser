@@ -23,34 +23,6 @@ impl FileDef {
         let mut def = FileDef::default();
 
         let name = Self::parse_name(&path);
-        let mut stream = Self::open_file(&path);
-
-        // Turn it into an iterator to allow more control
-        let tokens = Lexer::tokenize(&mut stream);
-
-        let mut in_class = false;
-
-        for token in tokens {
-            match token {
-                Token::ClassStart => {
-                    def.add_class();
-                    in_class = true;
-                },
-                Token::ClassEnd => in_class = false,
-
-                // If in class, pass tokens on to class definition
-                _ if in_class => {
-                    if let Some(class) = def.classes.last_mut() {
-                        class.take(token);
-                    }
-                }
-
-                // If still in this file def, pass tokens to self since tokens
-                // probably have to do with this file/this file's children
-                _ => def.take(token)
-            }
-        }
-
 
         def.path = path;
         def.name = name;
@@ -70,6 +42,17 @@ impl FileDef {
 
     pub fn namespace(&self) -> Option<&String> {
         self.namespace.as_ref()
+    }
+
+
+    pub fn set_namespace(&mut self, namespace: &str) {
+        self.namespace = Some(namespace.to_owned())
+    }
+
+
+    pub fn add_dependency(&mut self, dependency: &str) {
+        // Take a ClassDef reference or something later on...
+        self.dependencies.push(dependency.to_owned())
     }
 
 
