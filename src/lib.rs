@@ -28,12 +28,12 @@ impl Parser {
 
         // Walk through all items in each directory
         for dir in dirs {
-            self.parse_dir(Path::new(dir));
+            self.parse_dir(dir);
         }
     }
 
 
-    pub fn parse_dir(&self, dir: &Path) -> Vec<FileDef> {
+    pub fn parse_dir(&self, dir: &str) -> Vec<FileDef> {
         // Find all files and go down the parse chain
         let walker = WalkDir::new(dir).into_iter();
 
