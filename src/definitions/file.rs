@@ -103,33 +103,6 @@ impl FileDef {
 
         (*pieces.last().unwrap()).to_string()
     }
-
-
-    fn open_file(path: &PathBuf) -> BufReader<File> {
-        // Make sure you fail gracefully here
-        let file = File::open(path).unwrap();
-
-        BufReader::new(file)
-    }
-}
-
-
-
-impl ExtractTokens for FileDef {
-    fn take(&mut self, token: Token) {
-        match token {
-            Token::Namespace(n) => self.namespace = Some(n),
-            Token::Import(i) => self.dependencies.push(i),
-
-            Token::FunctionStart => self.add_function(),
-
-            _ => {
-                if let Some(function) = self.last_function() {
-                    function.take(token);
-                }
-            }
-        }
-    }
 }
 
 
