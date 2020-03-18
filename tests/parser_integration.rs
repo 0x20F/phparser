@@ -1,4 +1,4 @@
-use phparser::Parser;
+/*use phparser::Parser;
 use std::path::Path;
 
 
@@ -40,4 +40,4 @@ fn parse_file() {
 
     assert_eq!(file_path, *file.path());
     assert_eq!(file_name, *file.name());
-}
+}*/

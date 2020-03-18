@@ -1,4 +1,4 @@
-use phparser::lexer::{Lexer, Token};
+/*use phparser::lexer::{Lexer, Token};
 use std::io::BufReader;
 use std::fs::File;
 
@@ -83,4 +83,4 @@ fn function_tokens() {
     }
 
     assert_eq!(expected, counter);
-}
+}*/

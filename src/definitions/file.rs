@@ -78,6 +78,11 @@ impl FileDef {
     }
 
 
+    fn last_class(&mut self) -> Option<&mut ClassDef> {
+        self.classes.last_mut()
+    }
+
+
     fn add_function(&mut self) {
         self.functions.push(FunctionDef::default());
     }

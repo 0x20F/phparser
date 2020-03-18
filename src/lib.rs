@@ -57,13 +57,15 @@ impl Parser {
         let mut file = Self::open_file(&file_path);
         let tokens = Lexer::tokenize(&mut file);
 
+        let file_def = FileDef::default();
+
         for token in tokens {
-            println!("{:?}", token);
+            match token {
+                _ => println!("{:?}", token)
+            }
         }
 
-        // KEEP THIS HERE FOR OLD FUNCTIONALITY
-        // New file struct -> pass path
-        FileDef::new(file_path)
+        file_def
     }
 
 
@@ -74,4 +76,16 @@ impl Parser {
     }
 }
 
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn testing() {
+        let parser = Parser::new();
+        parser.parse(&["./tests/data/parse_file_test/"])
+    }
+}
 
