@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum Token {
     Namespace(String),
     Import(String), // Will probably need support for PHP7 soon
