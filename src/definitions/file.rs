@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::{PathBuf};
 use crate::lexer::{Lexer, Token};
-use crate::definitions::{ClassDef, FunctionDef, ExtractTokens};
+use crate::definitions::{ClassDef, FunctionDef};
 
 
 
