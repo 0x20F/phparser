@@ -168,7 +168,17 @@ impl<'a> Lex<'a> {
     }
 }
 
+impl<'a> Iterator for Lex<'a> {
+    type Item = &'a str;
 
+    fn next(&mut self) -> Option<Self::Item> {
+        let token = None;
+
+
+
+        token;
+    }
+}
 
 
 
