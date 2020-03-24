@@ -176,7 +176,16 @@ impl<'a> Iterator for Lex<'a> {
     type Item = &'a str;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let token = None;
+        let mut token = None;
+
+        let rest = self.code.char_indices()
+            .take_while(|(_, c)| !c.is_whitespace())
+            .last()
+            .map(|(i, c)| i + c.len_utf8())
+            .unwrap_or_default();
+
+        token = Some(&self.code[..rest]);
+        self.update(rest);
 
         token
     }
@@ -198,9 +207,9 @@ mod tests {
     #[test]
     fn lex() {
         let code = "class A { function b() {} }";
-        let tokens = Lex::new(code);
+        let mut tokens = Lex::new(code);
 
-        println!("{}", tokens.count());
+        println!("{:?}", tokens.next());
     }
 
 
