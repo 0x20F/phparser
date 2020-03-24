@@ -166,6 +166,10 @@ impl<'a> Lex<'a> {
     pub fn new(code: &'a str) -> Self {
         Self { code }
     }
+
+    fn update(&mut self, margin: usize) {
+        self.code = &self.code[margin..];
+    }
 }
 
 impl<'a> Iterator for Lex<'a> {
@@ -174,9 +178,7 @@ impl<'a> Iterator for Lex<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let token = None;
 
-
-
-        token;
+        token
     }
 }
 
@@ -190,6 +192,18 @@ impl<'a> Iterator for Lex<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+
+
+    #[test]
+    fn lex() {
+        let code = "class A { function b() {} }";
+        let tokens = Lex::new(code);
+
+        println!("{}", tokens.count());
+    }
+
+
 
     #[test]
     fn tokenize_class() {
