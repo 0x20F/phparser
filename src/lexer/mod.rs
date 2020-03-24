@@ -158,6 +158,22 @@ impl Lexer {
 
 
 
+pub struct Lex<'a> {
+    code: &'a str
+}
+
+impl<'a> Lex<'a> {
+    pub fn new(code: &'a str) -> Self {
+        Self { code }
+    }
+}
+
+
+
+
+
+
+
 
 
 
