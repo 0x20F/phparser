@@ -178,8 +178,21 @@ impl<'a> Iterator for Lex<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let mut token = None;
 
+        let special = &['(', ')', '{', '}'];
+
+        let first = self.code.chars().next().unwrap_or_default();
+
+        if ignored.contains(&first) {
+            println!("Character '{}' in '{}' should be ignored", first, self.code);
+
+            token = Some(&self.code[..1]);
+            self.update(1);
+
+            return token;
+        }
+
         let rest = self.code.char_indices()
-            .take_while(|(_, c)| !c.is_whitespace())
+            .take_while(|(_, c)| !c.is_whitespace() && !ignored.contains(c))
             .last()
             .map(|(i, c)| i + c.len_utf8())
             .unwrap_or_default();
