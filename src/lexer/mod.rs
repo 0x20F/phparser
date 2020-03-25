@@ -182,7 +182,7 @@ impl<'a> Iterator for Lex<'a> {
 
         let first = self.code.chars().next().unwrap_or_default();
 
-        if ignored.contains(&first) {
+        if special.contains(&first) {
             println!("Character '{}' in '{}' should be ignored", first, self.code);
 
             token = Some(&self.code[..1]);
@@ -192,7 +192,7 @@ impl<'a> Iterator for Lex<'a> {
         }
 
         let rest = self.code.char_indices()
-            .take_while(|(_, c)| !c.is_whitespace() && !ignored.contains(c))
+            .take_while(|(_, c)| !c.is_whitespace() && !special.contains(c))
             .last()
             .map(|(i, c)| i + c.len_utf8())
             .unwrap_or_default();
