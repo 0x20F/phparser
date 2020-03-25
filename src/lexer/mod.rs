@@ -168,7 +168,7 @@ impl<'a> Lex<'a> {
     }
 
     fn update(&mut self, margin: usize) {
-        self.code = &self.code[margin..];
+        self.code = &self.code[margin..].trim();
     }
 }
 
