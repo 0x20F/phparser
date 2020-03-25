@@ -209,7 +209,17 @@ mod tests {
         let code = "class A { function b() {} }";
         let mut tokens = Lex::new(code);
 
-        println!("{:?}", tokens.next());
+        let mut counter = 0;
+
+        for token in tokens {
+            println!("{:?}", token);
+
+            if counter == 10 {
+                break;
+            }
+
+            counter += 1;
+        }
     }
 
 
