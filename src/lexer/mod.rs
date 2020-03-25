@@ -159,16 +159,24 @@ impl Lexer {
 
 
 pub struct Lex<'a> {
-    code: &'a str
+    code: &'a str,
+    special: &'a [char]
 }
 
 impl<'a> Lex<'a> {
     pub fn new(code: &'a str) -> Self {
-        Self { code }
+        Self {
+            code,
+            special: &['(', ')', '{', '}']
+        }
     }
 
     fn update(&mut self, margin: usize) {
         self.code = &self.code[margin..].trim();
+    }
+
+    fn is_special(&self, c: &char) -> bool {
+        self.special.contains(c)
     }
 }
 
@@ -178,11 +186,9 @@ impl<'a> Iterator for Lex<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let mut token = None;
 
-        let special = &['(', ')', '{', '}'];
-
         let first = self.code.chars().next().unwrap_or_default();
 
-        if special.contains(&first) {
+        if self.is_special(&first) {
             println!("Character '{}' in '{}' should be ignored", first, self.code);
 
             token = Some(&self.code[..1]);
@@ -192,7 +198,7 @@ impl<'a> Iterator for Lex<'a> {
         }
 
         let rest = self.code.char_indices()
-            .take_while(|(_, c)| !c.is_whitespace() && !special.contains(c))
+            .take_while(|(_, c)| !c.is_whitespace() && !self.is_special(&c))
             .last()
             .map(|(i, c)| i + c.len_utf8())
             .unwrap_or_default();
