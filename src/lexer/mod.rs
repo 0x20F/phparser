@@ -192,20 +192,25 @@ impl<'a> Iterator for Lexemes<'a> {
 
         let first = self.code.chars().next().unwrap_or_default();
 
+        // If the character is special,
+        // return only the first occurence of that
+        // character
         if self.is_special(&first) {
-            println!("Character '{}' in '{}' should be ignored", first, self.code);
-
             token = Some(&self.code[..1]);
             self.update(1);
 
             return token;
         }
 
+        // If the character wasn't special,
+        // get everything until a space or until
+        // we hit another special character
         let rest = self.code.char_indices()
             .take_while(|(_, c)| !c.is_whitespace() && !self.is_special(&c))
             .last()
             .map(|(i, c)| i + c.len_utf8())
             .unwrap_or_default();
+
 
         token = Some(&self.code[..rest]);
         self.update(rest);
