@@ -186,6 +186,10 @@ impl<'a> Iterator for Lexemes<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let mut token = None;
 
+        if self.code.is_empty() {
+            return None;
+        }
+
         let first = self.code.chars().next().unwrap_or_default();
 
         if self.is_special(&first) {
@@ -228,16 +232,8 @@ mod tests {
         let code = "class A { function b() {} }";
         let mut tokens = Lexemes::from(code);
 
-        let mut counter = 0;
-
         for token in tokens {
             println!("{:?}", token);
-
-            if counter == 10 {
-                break;
-            }
-
-            counter += 1;
         }
     }
 
