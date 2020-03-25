@@ -158,13 +158,13 @@ impl Lexer {
 
 
 
-pub struct Lex<'a> {
+pub struct Lexemes<'a> {
     code: &'a str,
     special: &'a [char]
 }
 
-impl<'a> Lex<'a> {
-    pub fn new(code: &'a str) -> Self {
+impl<'a> Lexemes<'a> {
+    pub fn from(code: &'a str) -> Self {
         Self {
             code,
             special: &['(', ')', '{', '}']
@@ -180,7 +180,7 @@ impl<'a> Lex<'a> {
     }
 }
 
-impl<'a> Iterator for Lex<'a> {
+impl<'a> Iterator for Lexemes<'a> {
     type Item = &'a str;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -226,7 +226,7 @@ mod tests {
     #[test]
     fn lex() {
         let code = "class A { function b() {} }";
-        let mut tokens = Lex::new(code);
+        let mut tokens = Lexemes::from(code);
 
         let mut counter = 0;
 
