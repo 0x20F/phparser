@@ -1,8 +1,6 @@
-pub mod definitions;
 pub mod lexer;
 
 use walkdir::{WalkDir};
-use definitions::FileDef;
 use std::path::{Path, PathBuf};
 use std::io::BufReader;
 use std::fs::File;
@@ -28,7 +26,7 @@ impl Parser {
     }
 
 
-    pub fn parse_dir(&self, dir: &str) -> Vec<FileDef> {
+    pub fn parse_dir(&self, dir: &str) {
         // Find all files and go down the parse chain
         let walker = WalkDir::new(dir).into_iter();
 
@@ -43,13 +41,11 @@ impl Parser {
 
             files.push(self.parse_file(entry.path().to_owned()));
         }
-
-        files
     }
 
 
-    pub fn parse_file(&self, file_path: PathBuf) -> FileDef {
-        FileDef::new(file_path)
+    pub fn parse_file(&self, file_path: PathBuf) {
+        unimplemented!();
     }
 
 
