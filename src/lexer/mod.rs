@@ -75,7 +75,7 @@ mod tests {
     #[test]
     fn lex() {
         let code = "class A { function b() {} } $a = 50; $b = Container::class;";
-        let mut tokens = Lexemes::from(code);
+        let tokens = Lexemes::from(code);
 
         assert_eq!(tokens.count(), 21);
     }
