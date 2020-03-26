@@ -79,13 +79,11 @@ impl<'a> Iterator for Lexemes<'a> {
 mod tests {
     use super::*;
 
-
-
     #[test]
     fn lex() {
-        let code = "class A { function b() {} } $a = 50;";
+        let code = "class A { function b() {} } $a = 50; $b = Container::class;";
         let mut tokens = Lexemes::from(code);
 
-        assert_eq!(tokens.count(), 14);
+        assert_eq!(tokens.count(), 21);
     }
 }
