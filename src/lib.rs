@@ -1,9 +1,7 @@
 pub mod lexer;
 
 use walkdir::{WalkDir};
-use std::path::{Path, PathBuf};
-use std::io::BufReader;
-use std::fs::File;
+use std::path::{PathBuf};
 
 
 #[derive(Default)]
@@ -44,15 +42,8 @@ impl Parser {
     }
 
 
-    pub fn parse_file(&self, file_path: PathBuf) {
+    pub fn parse_file(&self, _file_path: PathBuf) {
         unimplemented!();
-    }
-
-
-    fn open_file(file_path: &PathBuf) -> BufReader<File> {
-        let file = File::open(file_path).unwrap();
-
-        BufReader::new(file)
     }
 }
 

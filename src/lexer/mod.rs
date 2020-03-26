@@ -1,10 +1,3 @@
-mod token;
-
-pub use token::Token;
-
-
-
-
 pub struct Lexemes<'a> {
     code: &'a str,
     special: &'a [char]
