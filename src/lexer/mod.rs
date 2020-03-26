@@ -86,8 +86,6 @@ mod tests {
         let code = "class A { function b() {} }";
         let mut tokens = Lexemes::from(code);
 
-        for token in tokens {
-            println!("{:?}", token);
-        }
+        assert_eq!(tokens.count(), 10);
     }
 }
