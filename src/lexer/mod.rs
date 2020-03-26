@@ -15,7 +15,7 @@ impl<'a> Lexemes<'a> {
     pub fn from(code: &'a str) -> Self {
         Self {
             code,
-            special: &['(', ')', '{', '}', ';', '=']
+            special: &['(', ')', '{', '}', ';', '=', ':']
         }
     }
 
