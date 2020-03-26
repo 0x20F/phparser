@@ -29,7 +29,7 @@ impl<'a> Iterator for Lexemes<'a> {
         let mut token = None;
 
         if self.code.is_empty() {
-            return None;
+            return token;
         }
 
         let first = self.code.chars().next().unwrap_or_default();
