@@ -54,20 +54,7 @@ impl Parser {
 
 
     pub fn parse_file(&self, file_path: PathBuf) -> FileDef {
-        let mut file = Self::open_file(&file_path);
-        let tokens = Lexer::tokenize(&mut file);
-
-        let mut file_def = FileDef::new(file_path);
-
-        for token in tokens {
-            match token {
-                Token::Import(i) => file_def.add_dependency(&i),
-                Token::Namespace(n) => file_def.set_namespace(&n),
-                _ => println!("{:?}", token)
-            }
-        }
-
-        file_def
+        FileDef::new(file_path)
     }
 
 
