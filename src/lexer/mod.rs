@@ -8,7 +8,7 @@ impl<'a> Lexemes<'a> {
     pub fn from(code: &'a str) -> Self {
         Self {
             code,
-            special: &['(', ')', '{', '}', ';', '=', ':']
+            special: &['(', ')', '{', '}', ';', '=', ':', '\\']
         }
     }
 
@@ -74,9 +74,9 @@ mod tests {
 
     #[test]
     fn lex() {
-        let code = "class A { function b() {} } $a = 50; $b = Container::class;";
+        let code = "class A { function b() {} } $a = 50; $b = \\Container::class;";
         let tokens = Lexemes::from(code);
 
-        assert_eq!(tokens.count(), 21);
+        assert_eq!(tokens.count(), 22);
     }
 }
