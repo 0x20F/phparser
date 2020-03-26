@@ -10,6 +10,7 @@ pub struct Lexemes<'a> {
     special: &'a [char]
 }
 
+
 impl<'a> Lexemes<'a> {
     pub fn from(code: &'a str) -> Self {
         Self {
@@ -26,6 +27,7 @@ impl<'a> Lexemes<'a> {
         self.special.contains(c)
     }
 }
+
 
 impl<'a> Iterator for Lexemes<'a> {
     type Item = &'a str;
