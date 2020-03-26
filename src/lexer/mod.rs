@@ -42,7 +42,7 @@ impl<'a> Iterator for Lexemes<'a> {
         let first = self.code.chars().next().unwrap_or_default();
 
         // If the character is special,
-        // return only the first occurence of that
+        // return only the first occurrence of that
         // character
         if self.is_special(&first) {
             token = Some(&self.code[..1]);
