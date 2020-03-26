@@ -78,16 +78,3 @@ impl Parser {
     }
 }
 
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn testing() {
-        let parser = Parser::new();
-        parser.parse(&["./tests/data/parse_file_test/"])
-    }
-}
-
