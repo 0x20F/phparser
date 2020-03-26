@@ -10,7 +10,6 @@ use definitions::FileDef;
 use std::path::{Path, PathBuf};
 use std::io::BufReader;
 use std::fs::File;
-use crate::lexer::{Lexer, Token};
 
 
 #[derive(Default)]
