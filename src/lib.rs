@@ -1,4 +1,4 @@
-pub mod lexer;
+mod lexer;
 
 use walkdir::{WalkDir};
 use std::path::{PathBuf};
