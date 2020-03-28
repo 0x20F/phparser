@@ -2,6 +2,8 @@ pub mod lexer;
 
 use walkdir::{WalkDir};
 use std::path::{PathBuf};
+use crate::lexer::Lexemes;
+use std::fs::read_to_string;
 
 
 #[derive(Default)]
@@ -42,8 +44,12 @@ impl Parser {
     }
 
 
-    pub fn parse_file(&self, _file_path: PathBuf) {
-        unimplemented!();
+    pub fn parse_file(&self, file_path: PathBuf) {
+        let file = read_to_string(file_path).unwrap();
+
+        for token in Lexemes::from(&file) {
+            println!("token is: {}", token);
+        }
     }
 }
 
