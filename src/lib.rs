@@ -48,7 +48,17 @@ impl Parser {
         let file = read_to_string(file_path).unwrap();
 
         for token in Lexemes::from(&file) {
-            println!("token is: {}", token);
+            match token {
+                "namespace" => println!("Namespace"),
+                "use" => println!("Dependency import"),
+
+                "class" => println!("Class start"),
+
+                "{" => println!("Code block start"),
+                "}" => println!("Code block end"),
+
+                _ => ()
+            }
         }
     }
 }
