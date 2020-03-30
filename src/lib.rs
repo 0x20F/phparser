@@ -60,7 +60,10 @@ impl Parser {
                 "namespace" => println!("Namespace"),
                 "use" => println!("Dependency import"),
 
-                "class" => println!("Class start"),
+                "class" => {
+                    println!("Class start");
+                    println!("Class name: {}", tokens.next().unwrap());
+                },
 
                 "{" => println!("Code block start"),
                 "}" => println!("Code block end"),
