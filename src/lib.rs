@@ -47,8 +47,29 @@ impl Parser {
     pub fn parse_file(&self, file_path: PathBuf) {
         let file = read_to_string(file_path).unwrap();
 
-        for token in Lexemes::from(&file) {
-            println!("token is: {}", token);
+        let mut tokens = Lexemes::from(&file);
+
+        loop {
+            let token = tokens.next();
+
+            if let None = token {
+                break;
+            }
+
+            match token.unwrap() {
+                "namespace" => println!("Namespace"),
+                "use" => println!("Dependency import"),
+
+                "class" => {
+                    println!("Class start");
+                    println!("Class name: {}", tokens.next().unwrap());
+                },
+
+                "{" => println!("Code block start"),
+                "}" => println!("Code block end"),
+
+                _ => ()
+            }
         }
     }
 }
